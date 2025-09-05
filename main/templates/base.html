@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="winter">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Pacil Station</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link
       href="https://cdn.jsdelivr.net/npm/daisyui@5"
@@ -17,7 +17,14 @@
       type="text/css"
     />
   </head>
-  <body>
-    
+  <body class="relative">
+    <div class="px-5 max-w-7xl mx-auto">
+      {% include "partial/navbar.html" %}
+
+      <main class="py-6">
+        {% block content %}{% endblock %}
+      </main>
+    </div>
   </body>
+  {% include "partial/footer.html" %} 
 </html>

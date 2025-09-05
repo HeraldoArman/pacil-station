@@ -1,0 +1,67 @@
+<div class="card lg:card-side bg-base-100 shadow-sm">
+  <figure class="w-full lg:w-1/2">
+    <div class="relative w-full aspect-[4/3] overflow-hidden">
+      
+      <img 
+        src="{{ product.thumbnail|default:image_url }}" 
+        alt="{{ product.name|default:title }}" 
+        class="w-full h-full object-cover{% if product.flip_thumbnail %} -scale-x-100{% endif %}" 
+      />
+    </div>
+  </figure>
+
+  <div class="card-body gap-3">
+    <h2 class="card-title text-lg leading-snug">
+      {{ product.name|default:title }}
+    </h2>
+
+    <div class="flex flex-wrap gap-2">
+      {% if product.brand %}
+        <span class="badge badge-outline">{{ product.brand.name }}</span>
+      {% endif %}
+      {% if product.category %}
+        <span class="badge badge-neutral">{{ product.category }}</span>
+      {% endif %}
+    </div>
+
+
+    {% if product.description or description %}
+      <p class="text-sm line-clamp- overflow-hidden text-ellipsis">
+      {{ product.description|default:description|truncatechars:40 }}
+      </p>
+    {% endif %}
+
+    <div class="flex items-center gap-3">
+      {% if product.rating %}
+        <div class="flex items-center gap-1 text-warning">
+          {% with r=product.rating|floatformat:1 %}
+            {% for i in "12345" %}
+              {% if forloop.counter <= product.rating %}
+                <svg class="w-4 h-4 fill-yellow-400" viewBox="0 0 20 20">
+                  <path d="M10 15.27L16.18 19l-1.64-7.03L20 7.24l-7.19-.61L10 0 7.19 6.63 0 7.24l5.46 4.73L3.82 19z"/>
+                </svg>
+              {% else %}
+                <svg class="w-4 h-4 fill-current opacity-50" viewBox="0 0 20 20">
+                  <path d="M10 15.27L16.18 19l-1.64-7.03L20 7.24l-7.19-.61L10 0 7.19 6.63 0 7.24l5.46 4.73L3.82 19z"/>
+                </svg>
+              {% endif %}
+            {% endfor %}
+            <span class="text-xs text-base-content/70">({{ r }})</span>
+          {% endwith %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="mt-1">
+      {% if product.price %}
+        <div class="text-lg font-semibold">
+          Rp {{ product.price|floatformat:0 }}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="card-actions justify-end mt-2">
+      <a class="btn btn-primary btn-sm" href={{ product.id }}>Beli Sekarang</a>
+    </div>
+  </div>
+</div>
