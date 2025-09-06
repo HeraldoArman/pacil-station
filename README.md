@@ -1,14 +1,13 @@
 # Tugas 2: Implementasi Model-View-Template (MVT) pada Django
 **Nama:** Heraldo Arman  
-**NPM:** 2406420702
+**NPM:** 2406420702     
 **Kelas:** PBP - E  
-
-**Link Penugasan:** [Assignment 2](https://pbp-fasilkom-ui.github.io/ganjil-2026/assignments/individual/assignment-2)  
-**Link Deployment:** otw
+**Link Penugasan:** [Tugas 2](https://pbp-fasilkom-ui.github.io/ganjil-2026/assignments/individual/assignment-2)  
+**Link Deployment:** [heraldo-arman-pacilstation.pbp.cs.ui.ac.id](https://heraldo-arman-pacilstation.pbp.cs.ui.ac.id/)  
 
 ---
 ## 1. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
-Selain mengikuti tutorial, saya juga bereksperimen dengan beberapa hal tambahan. Saya membaca [dokumentasi resmi](https://docs.djangoproject.com/en/5.2/), tutorial eksternal seperti [w3school](https://www.w3schools.com/django/), dan juga sesekali bertanya ke LLM untuk debugging error. Beberapa hal yang saya eksplorasi tambahan diluar penugasan yang saya lakukan antara lain mencoba UI library ([DaisyUI](https://daisyui.com/docs/cdn/) & [TailwindCSS](https://tailwindcss.com/docs/installation/play-cdn)) dengan [CDN](https://aws.amazon.com/id/what-is/cdn/), mencoba Django Admin, serta melakukan read database.  
+Selain mengikuti tutorial, saya juga bereksperimen dengan beberapa hal tambahan. Saya membaca [dokumentasi resmi](https://docs.djangoproject.com/en/5.2/), tutorial eksternal seperti [w3school](https://www.w3schools.com/django/), dan juga sesekali bertanya ke LLM untuk debugging error. Beberapa hal yang saya eksplorasi tambahan diluar penugasan yang saya lakukan antara lain mencoba UI library ([DaisyUI](https://daisyui.com/docs/cdn/) dan [TailwindCSS](https://tailwindcss.com/docs/installation/play-cdn)) dengan [CDN](https://aws.amazon.com/id/what-is/cdn/), mencoba Django Admin, serta melakukan read database.  
 
 Langkah yang saya lakukan secara garis besar adalah:
 
@@ -20,7 +19,7 @@ Langkah yang saya lakukan secara garis besar adalah:
 6. Membuat model bernama **Product**, lalu memasukannya di `admin.py` agar bisa menambahkan data.  
 7. Membuat superuser untuk mengakses admin dashboard.
 8. Membuat template dan bereksperimen dengan tampilan frontend.  
-
+9. Melakukan deployment ke [PWS](https://pbp.cs.ui.ac.id/web)
 ---
 
 ## 2. Buatlah bagan yang berisi request client ke web aplikasi berbasis Django beserta responnya dan jelaskan pada bagan tersebut kaitan antara `urls.py`, `views.py`, `models.py`, dan berkas html.
@@ -80,10 +79,9 @@ Menurut saya pribadi:
 Tutorial seru, walaupun sayangnya harus dilaksanakan secara online. Asisten dosen ramah dan sangat membantu. Semoga kedepannya bisa segera kembali offline.
 
 ---
+## 
+- logo: [logoipsum.com](https://logoipsum.com/artwork/389)
+---
 
 ## Lampiran Screenshot Project
 otw
-
-```
-
----
