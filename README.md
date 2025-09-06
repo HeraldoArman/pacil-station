@@ -79,9 +79,10 @@ Menurut saya pribadi:
 Tutorial seru, walaupun sayangnya harus dilaksanakan secara online. Asisten dosen ramah dan sangat membantu. Semoga kedepannya bisa segera kembali offline.
 
 ---
-## 
+## Credit
 - logo: [logoipsum.com](https://logoipsum.com/artwork/389)
 ---
 
 ## Lampiran Screenshot Project
-otw
+![main page](image/main-page.png)  
+![product page](image/product-page.png)  
