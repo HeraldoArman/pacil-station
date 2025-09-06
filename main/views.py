@@ -6,6 +6,8 @@ def show_main(request):
     featured_products = Product.objects.filter(is_featured=True).order_by('total_sales')
     all_products = Product.objects.all().order_by('total_sales')
     context = {
+        "name" : "Heraldo Arman",
+        "class": "PBP - E",
         "featured_products": featured_products,
         "all_products": all_products,
     }  

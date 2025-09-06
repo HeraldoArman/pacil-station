@@ -52,6 +52,14 @@
                   type="radio"
                   name="theme-dropdown"
                   class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
+                  aria-label="Light"
+                  value="light" />
+              </li>
+              <li>
+                <input
+                  type="radio"
+                  name="theme-dropdown"
+                  class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
                   aria-label="Winter"
                   value="winter" />
               </li>
@@ -100,3 +108,27 @@
     class="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 hidden md:hidden"
   ></div>
 </header>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+
+    const savedTheme = localStorage.getItem('theme') || 'winter';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    const themeRadio = document.querySelector(`input[value="${savedTheme}"]`);
+    if (themeRadio) {
+      themeRadio.checked = true;
+    }
+    
+    const themeControllers = document.querySelectorAll('.theme-controller');
+    themeControllers.forEach(controller => {
+      controller.addEventListener('change', function() {
+        if (this.checked) {
+          const theme = this.value;
+          document.documentElement.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+      });
+    });
+  });
+  </script>
