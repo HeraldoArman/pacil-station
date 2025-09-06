@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "partial/hero.html" %}
+<div class="divider mb-12 text-3xl font-bold text-center justify-center" id="featured-products">
+  Featured Products
+</div>
+
+<div class="relative mb-20 gap-20 pb-20">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+    {% for product in featured_products %}
+      {% include "components/featured_card.html" with image_url=product.thumbnail title=product.name description=product.description %}
+    {% empty %}
+      <p class="text-center col-span-full">No featured products available.</p>
+    {% endfor %}
+  </div>
+</div>
+
+<div id="all-products" class="divider mb-12 text-3xl font-bold text-center justify-center">
+  All Products
+</div>
+
+<div class="relative">
+  <div class="flex flex-wrap gap-6">
+    {% for product in all_products %}
+      {% include "components/small_card.html" with product=product image_url=product.thumbnail title=product.title %}
+    {% empty %}
+      <p class="text-center w-full">No products available.</p>
+    {% endfor %}
+  </div>
+</div>
+</div>
+{% endblock %}

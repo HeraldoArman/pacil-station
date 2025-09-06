@@ -1,0 +1,134 @@
+<header class="sticky top-0 backdrop-blur-sm z-50">
+  <div class="py-5">
+    <div class="container px-5 max-w-7xl mx-auto">
+      <div class="flex items-center justify-between w-full">
+        <a href="/" class="flex items-center gap-2">
+          <svg
+            width="15%"
+            height="15%"
+            viewBox="0 0 53 43"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M37.5 27.0752C37.5 20.4478 32.1274 15.0752 25.5 15.0752H15.5V27.0752H25.5V42.0752H37.5V27.0752Z"
+              fill="#FF4D00"
+            ></path>
+            <path
+              d="M0.5 28.0752C0.500001 35.8072 6.76801 42.0752 14.5 42.0752L22.5 42.0752L22.5 30.0752H14.5C13.3954 30.0752 12.5 29.1798 12.5 28.0752V27.0752L0.5 27.0752L0.5 28.0752Z"
+              fill="#FF4D00"
+            ></path>
+            <path
+              d="M25.5 0.0751953C40.4117 0.0751953 52.5 12.1635 52.5 27.0752V42.0752H40.5V27.0752C40.5 18.7909 33.7843 12.0752 25.5 12.0752H14.5C13.3954 12.0752 12.5 12.9706 12.5 14.0752V15.0752H0.500001V14.0752C0.500002 6.34321 6.76802 0.0751953 14.5 0.0751953H25.5Z"
+              fill="#FF4D00"
+            ></path>
+          </svg>
+          <span class="text-lg font-bold text-black">Pacil Station</span>
+        </a>
+
+        <nav class="hidden sm:flex gap-6 text-black/60 items-center">
+          <a href="/#all-products" class="hover:text-black transition-colors">All Product</a>
+          <a
+            href="/#featured-products"
+            class="bg-black text-white px-4 py-2 rounded-lg font-medium inline-flex justify-center tracking-tight hover:bg-gray-800 transition-colors"
+          >
+            Featured
+          </a>
+          <div class="dropdown">
+            <div tabindex="0" role="button" class="btn m-1">
+              Theme
+              <svg
+                width="12px"
+                height="12px"
+                class="inline-block h-2 w-2 fill-current opacity-60"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 2048 2048">
+                <path d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"></path>
+              </svg>
+            </div>
+            <ul tabindex="0" class="dropdown-content bg-base-300 rounded-box z-1 w-52 p-2 shadow-2xl">
+              <li>
+                <input
+                  type="radio"
+                  name="theme-dropdown"
+                  class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
+                  aria-label="Light"
+                  value="light" />
+              </li>
+              <li>
+                <input
+                  type="radio"
+                  name="theme-dropdown"
+                  class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
+                  aria-label="Winter"
+                  value="winter" />
+              </li>
+              <li>
+                <input
+                  type="radio"
+                  name="theme-dropdown"
+                  class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
+                  aria-label="Pastel"
+                  value="pastel" />
+              </li>
+              <li>
+                <input
+                  type="radio"
+                  name="theme-dropdown"
+                  class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
+                  aria-label="Fantasy"
+                  value="fantasy" />
+              </li>
+              <li>
+                <input
+                  type="radio"
+                  name="theme-dropdown"
+                  class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
+                  aria-label="Acid"
+                  value="acid" />
+              </li>
+              <li>
+                <input
+                  type="radio"
+                  name="theme-dropdown"
+                  class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
+                  aria-label="Silk"
+                  value="silk" />
+              </li>
+            </ul>
+          </div>
+        </nav>
+        
+      </div>
+    </div>
+  </div>
+
+  <div
+    id="overlay"
+    class="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 hidden md:hidden"
+  ></div>
+</header>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+
+    const savedTheme = localStorage.getItem('theme') || 'winter';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    const themeRadio = document.querySelector(`input[value="${savedTheme}"]`);
+    if (themeRadio) {
+      themeRadio.checked = true;
+    }
+    
+    const themeControllers = document.querySelectorAll('.theme-controller');
+    themeControllers.forEach(controller => {
+      controller.addEventListener('change', function() {
+        if (this.checked) {
+          const theme = this.value;
+          document.documentElement.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+        }
+      });
+    });
+  });
+  </script>
