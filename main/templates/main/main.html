@@ -20,7 +20,7 @@
 </div>
 
 <div class="relative">
-  <div class="flex flex-wrap gap-6">
+  <div class="flex flex-wrap gap-6 items-center justify-center">
     {% for product in all_products %}
       {% include "components/small_card.html" with product=product image_url=product.thumbnail title=product.title %}
     {% empty %}
