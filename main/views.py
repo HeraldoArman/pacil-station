@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Product
+from .models import Product, Employee
 
 
 def show_main(request):
@@ -22,3 +22,23 @@ def product_detail(request, pk):
         "related_products": related_products,
     }
     return render(request, "main/product.html", context)
+
+def add_employee(request):
+    
+    employees = Employee.objects.create(name="Aldo", age=20, persona="suka tidur")
+    
+    context = {
+        "employees" : employees
+    }
+    return render(request, "main/employee.html", context)
+
+
+def view_xml(request):
+    pass
+
+def view_json(request):
+    pass
+def view_xml_by_id(request, id):
+    pass
+def view_json_by_id(request, id):
+    pass
