@@ -1,6 +1,8 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import Product, Employee
-
+from django.http import HttpResponse
+from django.core import serializers
+from .forms import ProductForm, BrandForm
 
 def show_main(request):
     featured_products = Product.objects.filter(is_featured=True).order_by('total_sales')
@@ -34,11 +36,52 @@ def add_employee(request):
 
 
 def view_xml(request):
-    pass
+    products = Product.objects.all()
+    xml_data = serializers.serialize("xml", products)
+    return HttpResponse(xml_data, content_type="application/xml")
+
 
 def view_json(request):
-    pass
-def view_xml_by_id(request, id):
-    pass
-def view_json_by_id(request, id):
-    pass
+    products = Product.objects.all()
+    json_data = serializers.serialize("json", products)
+    return HttpResponse(json_data, content_type="application/json")
+
+
+def view_xml_by_id(request, pk):
+    try:
+        productData = get_object_or_404(Product, pk=pk)
+        xml_data = serializers.serialize("xml", [productData])
+        return HttpResponse(xml_data, content_type="application/xml")
+    except Product.DoesNotExist:
+        return HttpResponse("Product not found", status=404)
+        
+    
+def view_json_by_id(request, pk):
+    try:
+        productData = get_object_or_404(Product, pk=pk)
+        json_data = serializers.serialize("json", [productData])
+        return HttpResponse(json_data, content_type="application/json")
+    except Product.DoesNotExist:
+        return HttpResponse("Product not found", status=404)
+    
+    
+def add_product(request):
+    form = ProductForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect('main:show_main')
+    context = {
+        "form": form,
+    }
+    return render(request, "main/add_product.html", context)
+    
+    
+def add_brand(request):
+    form = BrandForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect('main:add_product')
+    context = {
+        "form": form,
+    }
+    return render(request, "main/add_brand.html", context)

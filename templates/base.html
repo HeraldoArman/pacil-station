@@ -17,14 +17,13 @@
       type="text/css"
     />
   </head>
-  <body class="relative">
-    <div class="px-5 max-w-7xl mx-auto">
-      {% include "partial/navbar.html" %}
-
-      <main class="py-6">
-        {% block content %}{% endblock %}
-      </main>
+  <body class="flex flex-col min-h-screen">
+    {% include "partial/navbar.html" %}
+    <div class="flex-1 px-5 max-w-7xl mx-auto">
+      <main class="py-6">{% block content %}{% endblock %}</main>
     </div>
+
   </body>
-  {% include "partial/footer.html" %} 
+
+  {% include "partial/footer.html" %}
 </html>
