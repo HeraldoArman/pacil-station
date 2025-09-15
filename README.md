@@ -138,3 +138,12 @@ Sisanya seperti `serta tombol "Detail" pada setiap data objek model yang akan me
 
 
 ---
+## Lampiran Screenshot Postman Untuk Mendapatkan data JSON dan XML
+### Get All Product JSON
+![Get All Product JSON](image/json.png) 
+### Get All Product XML
+![Get All Product XML](image/xml.png)
+### Get Product By Id JSON
+![Get Product by Id JSON](image/json-id.png) 
+### Get Product By Id XML
+![Get Product by Id XML](image/xml-id.png) 
