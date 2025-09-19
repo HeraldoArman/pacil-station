@@ -3,6 +3,12 @@ from .models import Product, Employee
 from django.http import HttpResponse
 from django.core import serializers
 from .forms import ProductForm, BrandForm
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.http import HttpResponse, HttpResponseRedirect
+import datetime
+from django.urls import reverse
 
 def show_main(request):
     featured_products = Product.objects.filter(is_featured=True).order_by('total_sales')
@@ -85,3 +91,50 @@ def add_brand(request):
         "form": form,
     }
     return render(request, "main/add_brand.html", context)
+
+def login_views(request):
+    if request.method == "POST":
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            response = HttpResponseRedirect(reverse("main:show_main"))
+            response.set_cookie('last_login', str(datetime.datetime.now()))
+            return response
+        
+    else:
+        form = AuthenticationForm()
+    context = {
+        'form': form,
+    }
+    return render(request, 'main/login.html', context)
+
+def register_view(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('main:login')
+    else:
+        form = UserCreationForm()
+    context = {
+        'form': form,
+    }
+    return render(request, 'main/register.html', context)
+
+
+@login_required(login_url='/login/')
+def logout_user(request):
+    logout(request)
+    response = HttpResponseRedirect(reverse("main:login_user"))
+    response.delete_cookie('last_login')
+    return redirect('main:show_main')
+
+
+@login_required(login_url='/login/')
+def profile_view(request):
+    last_login = request.COOKIES.get('last_login')
+    context = {
+        'last_login': last_login,
+    }
+    return render(request, 'main/profile.html', context)

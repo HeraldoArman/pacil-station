@@ -5,6 +5,43 @@
   Featured Products
 </div>
 
+{% if not user.is_authenticated %}
+<dialog id="login_required" class="modal modal-bottom sm:modal-middle" open>
+  <div class="modal-box shadow-xl rounded-lg">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 hover:text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </form>
+    <div class="flex flex-col items-center">
+      <div class="mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        </svg>
+      </div>
+      <h3 class="text-xl font-bold mb-2">Welcome!</h3>
+      <p class="py-2 text-gray-700 text-center">
+        You are currently not logged in.<br>
+        For a better experience and to access more features, please log in to your account.
+      </p>
+    </div>
+    <div class="modal-action flex justify-center gap-4 mt-4">
+      <a href="{% url 'main:login' %}" class="btn btn-primary flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7" />
+        </svg>
+        Login
+      </a>
+      <form method="dialog" class="inline">
+        <button class="btn btn-outline">Close</button>
+      </form>
+    </div>
+  </div>
+</dialog>
+{% endif %}
+
 <div class="relative mb-20 gap-20 pb-20">
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
     {% for product in featured_products %}
@@ -29,4 +66,7 @@
   </div>
 </div>
 </div>
+
+
+
 {% endblock %}
