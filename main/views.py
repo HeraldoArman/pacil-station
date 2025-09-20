@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Product, Employee
 from django.http import HttpResponse
 from django.core import serializers
-from .forms import ProductForm, BrandForm, LoginForm
+from .forms import ProductForm, BrandForm, LoginForm, RegisterForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
@@ -112,12 +112,12 @@ def login_views(request):
 
 def register_view(request):
     if request.method == "POST":
-        form = UserCreationForm(request.POST)
+        form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('main:login')
     else:
-        form = UserCreationForm()
+        form = RegisterForm()
     context = {
         'form': form,
     }

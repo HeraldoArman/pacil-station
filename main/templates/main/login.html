@@ -2,11 +2,11 @@
 <title>Login - Pacil Station</title>
 {% endblock meta %} {% block content %}
 <div class="flex justify-center items-center py-10">
-  <div class="card w-full max-w-md bg-base-100 shadow-xl min-w-xs">
+  <div class="card w-md max-w-md bg-base-100 shadow-xl min-w-xs">
     <div class="card-body">
       <h1 class="text-3xl font-bold text-center mb-6">Login</h1>
 
-      <form method="POST" action="" class="space-y-4">
+      <form method="POST" action="" class="space-y-4" novalidate>
         {% csrf_token %}
 
         <div class="form-control">

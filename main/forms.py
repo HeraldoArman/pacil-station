@@ -1,8 +1,8 @@
 from django.forms import ModelForm
 from .models import Product
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm
-
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.models import User
 
 class ProductForm(forms.ModelForm):
     class Meta:
@@ -56,3 +56,38 @@ class LoginForm(AuthenticationForm):
             }
         )
     )
+    
+class RegisterForm(UserCreationForm):
+    username = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "class": "input input-bordered w-full",
+                "placeholder": "Username",
+                "autocomplete": "username",
+            }
+        )
+    )
+    password1 = forms.CharField(
+        label="Password",
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "input input-bordered w-full",
+                "placeholder": "Password",
+                "autocomplete": "new-password",
+            }
+        )
+    )
+    password2 = forms.CharField(
+        label="Confirm Password",
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "input input-bordered w-full",
+                "placeholder": "Confirm Password",
+                "autocomplete": "new-password",
+            }
+        )
+    )
+
+    class Meta:
+        model = User
+        fields = ["username", "password1", "password2"]
