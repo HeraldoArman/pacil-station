@@ -1,4 +1,10 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %} 
+
+{% block meta %}
+<title>{{ product.name }} - Pacil Station</title>
+{% endblock meta %}
+
+{% block content %}
 <div class="container mx-auto px-4 py-2 overflow-x-hidden">
   <div class="grid lg:grid-cols-2 gap-10 items-start mb-16">
     <div class="w-full">

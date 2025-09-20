@@ -5,8 +5,11 @@
   Featured Products
 </div>
 
+
+
+
 {% if not user.is_authenticated %}
-<dialog id="login_required" class="modal modal-bottom sm:modal-middle" open>
+<dialog id="login_required" class="modal modal-bottom sm:modal-middle">
   <div class="modal-box shadow-xl rounded-lg">
     <form method="dialog">
       <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" aria-label="Close">
@@ -41,6 +44,15 @@
   </div>
 </dialog>
 {% endif %}
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const modal = document.getElementById("login_required");
+    if (modal && !sessionStorage.getItem("loginModalShown")) {
+      modal.showModal();
+      sessionStorage.setItem("loginModalShown", "true"); 
+    }
+  });
+</script>
 
 <div class="relative mb-20 gap-20 pb-20">
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
