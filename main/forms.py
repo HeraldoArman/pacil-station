@@ -1,8 +1,8 @@
 from django.forms import ModelForm
 from .models import Product
-
 from django import forms
-from .models import Product
+from django.contrib.auth.forms import AuthenticationForm
+
 
 class ProductForm(forms.ModelForm):
     class Meta:
@@ -35,3 +35,24 @@ class BrandForm(ModelForm):
         widgets = {
             "name": forms.TextInput(attrs={"class": "input input-bordered w-full"}),
         }
+        
+
+class LoginForm(AuthenticationForm):
+    username = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "class": "input input-bordered w-full",
+                "placeholder": "Username",
+                "autocomplete": "username",
+            }
+        )
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "input input-bordered w-full",
+                "placeholder": "Password",
+                "autocomplete": "current-password",
+            }
+        )
+    )

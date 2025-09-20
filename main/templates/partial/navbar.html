@@ -127,15 +127,27 @@
               tabindex="0"
               class="menu dropdown-content bg-base-200 rounded-box z-1 mt-4 w-52 p-2 shadow-sm"
             >
-                <li>
-                <a href="" class="hover:bg-base-300 rounded-md px-3 py-2 transition-colors">Profile</a>
-                </li>
-                <li>
-                <a href="{% url 'main:add_product' %}" class="hover:bg-base-300 rounded-md px-3 py-2 transition-colors">Add New Product</a>
-                </li>
-                <li>
-                <a href="" class="hover:bg-red-100 text-red-600 rounded-md px-3 py-2 transition-colors">Logout</a>
-                </li>
+              <li>
+                <a
+                  href=""
+                  class="hover:bg-base-300 rounded-md px-3 py-2 transition-colors"
+                  >Profile</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{% url 'main:add_product' %}"
+                  class="hover:bg-base-300 rounded-md px-3 py-2 transition-colors"
+                  >Add New Product</a
+                >
+              </li>
+              <li>
+                <a
+                  href=""
+                  class="hover:bg-red-100 text-red-600 rounded-md px-3 py-2 transition-colors"
+                  >Logout</a
+                >
+              </li>
             </ul>
           </div>
           {% else %}

@@ -2,13 +2,14 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Product, Employee
 from django.http import HttpResponse
 from django.core import serializers
-from .forms import ProductForm, BrandForm
+from .forms import ProductForm, BrandForm, LoginForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.http import HttpResponse, HttpResponseRedirect
 import datetime
 from django.urls import reverse
+
 
 def show_main(request):
     featured_products = Product.objects.filter(is_featured=True).order_by('total_sales')
@@ -94,7 +95,7 @@ def add_brand(request):
 
 def login_views(request):
     if request.method == "POST":
-        form = AuthenticationForm(data=request.POST)
+        form = LoginForm(data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
@@ -103,7 +104,7 @@ def login_views(request):
             return response
         
     else:
-        form = AuthenticationForm()
+        form = LoginForm()
     context = {
         'form': form,
     }

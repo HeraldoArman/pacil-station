@@ -1,0 +1,88 @@
+{% extends 'base.html' %} {% block meta %}
+<title>Login - Pacil Station</title>
+{% endblock meta %} {% block content %}
+<div class="flex justify-center items-center py-10">
+  <div class="card w-full max-w-md bg-base-100 shadow-xl min-w-md">
+    <div class="card-body">
+      <h1 class="text-3xl font-bold text-center mb-6">Login</h1>
+
+      <form method="POST" action="" class="space-y-4">
+        {% csrf_token %}
+
+        <div class="form-control">
+          <label class="label"
+            ><span class="label-text font-semibold"
+              >{{ form.username.label }}</span
+            ></label
+          >
+          {{ form.username }} {% if form.username.errors %}
+          <p class="text-error text-sm mt-1">
+            {{ form.username.errors|striptags }}
+          </p>
+          {% endif %}
+        </div>
+
+        <div class="form-control">
+          <label class="label"
+            ><span class="label-text font-semibold"
+              >{{ form.password.label }}</span
+            ></label
+          >
+          {{ form.password }} {% if form.password.errors %}
+          <p class="text-error text-sm mt-1">
+            {{ form.password.errors|striptags }}
+          </p>
+          {% endif %}
+        </div>
+
+        {% if form.non_field_errors %}
+        <div role="alert" class="alert alert-error alert-soft">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 shrink-0 stroke-current"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <span>{{ form.non_field_errors|striptags }}</span>
+        </div>
+        {% endif %} {% if messages %} {% for message in messages %}
+        <div role="alert" class="alert alert-{{ message.tags }} alert-soft">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 shrink-0 stroke-current"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <span>{{ message }}</span>
+        </div>
+        {% endfor %} {% endif %}
+
+        <div class="form-control mt-6">
+          <button type="submit" class="btn btn-primary w-full">Login</button>
+        </div>
+      </form>
+
+      <p class="text-center mt-4">
+        Don't have an account yet?
+        <a href="{% url 'main:register' %}" class="link link-primary font-bold"
+          >Register Now</a
+        >
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock content %}
