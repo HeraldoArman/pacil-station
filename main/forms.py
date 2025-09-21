@@ -2,7 +2,7 @@ from django.forms import ModelForm
 from .models import Product
 
 from django import forms
-from .models import Product
+from .models import Product, Car
 
 class ProductForm(forms.ModelForm):
     class Meta:
@@ -35,3 +35,8 @@ class BrandForm(ModelForm):
         widgets = {
             "name": forms.TextInput(attrs={"class": "input input-bordered w-full"}),
         }
+        
+class CarForm(ModelForm):
+    class Meta:
+        model = Car
+        fields = ["name", "brand", "stock"]

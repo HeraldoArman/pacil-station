@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Product, Employee
 from django.http import HttpResponse
 from django.core import serializers
-from .forms import ProductForm, BrandForm
+from .forms import ProductForm, BrandForm, CarForm
 
 def show_main(request):
     featured_products = Product.objects.filter(is_featured=True).order_by('total_sales')
@@ -85,3 +85,13 @@ def add_brand(request):
         "form": form,
     }
     return render(request, "main/add_brand.html", context)
+
+def add_car(request):
+    form = CarForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect('main:show_main')
+    context = {
+        "form": form,
+    }
+    return render(request, "main/add_car.html", context)
