@@ -1,10 +1,6 @@
-{% extends "base.html" %} 
-
-{% block meta %}
+{% extends "base.html" %} {% block meta %}
 <title>{{ product.name }} - Pacil Station</title>
-{% endblock meta %}
-
-{% block content %}
+{% endblock meta %} {% block content %}
 <div class="container mx-auto px-4 py-2 overflow-x-hidden">
   <div class="grid lg:grid-cols-2 gap-10 items-start mb-16">
     <div class="w-full">
@@ -21,6 +17,59 @@
 
     <div class="space-y-6">
       <div>
+        {% if user.is_authenticated and product.user == user %}
+        <div class="mb-4 relative flex justify-end">
+          <details class="dropdown dropdown-end">
+            <summary class="btn btn-ghost btn-sm p-2 rounded-full">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="12" cy="5" r="1" />
+                <circle cx="12" cy="12" r="1" />
+                <circle cx="12" cy="19" r="1" />
+              </svg>
+            </summary>
+
+            <ul
+              class="menu dropdown-content bg-base-100 rounded-box w-52 p-2 shadow-lg mt-1"
+            >
+              <li>
+                <form
+                  method="POST"
+                  action="{% url 'main:delete_product' product.id %}"
+                >
+                  {% csrf_token %}
+                  <button
+                    type="submit"
+                    class="flex items-center gap-2 w-full px-2 py-1 text-error hover:bg-error/10 rounded"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path d="M10 11v6" />
+                      <path d="M14 11v6" />
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                      <path d="M3 6h18" />
+                      <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                    </svg>
+                    Hapus Produk
+                  </button>
+                </form>
+              </li>
+            </ul>
+          </details>
+        </div>
+        {% endif %}
         <h1 class="text-3xl font-bold mb-3">{{ product.name }}</h1>
         <div class="flex flex-wrap gap-2 mb-4">
           <span class="badge badge-outline">{{ product.brand.name }}</span>
@@ -54,9 +103,7 @@
         >
       </div>
 
-        <div class="text-3xl font-bold">
-          Rp {{ product.price }}
-        </div>
+      <div class="text-3xl font-bold">Rp {{ product.price }}</div>
 
       <div>
         <h2 class="text-xl font-semibold mb-3">Deskripsi Produk</h2>
@@ -66,15 +113,23 @@
           {{ product.description }}
         </p>
       </div>
-
+      <div>
+        <h3 class="text-base font-medium">
+          Penjual: {{ product.user.username|default:"Tidak diketahui" }}
+        </h3>
+      </div>
 
       <div class="flex flex-col sm:flex-row gap-3">
-        <button class="btn btn-primary" onclick="my_modal_1.showModal()">Beli Sekarang</button>
+        <button class="btn btn-primary" onclick="my_modal_1.showModal()">
+          Beli Sekarang
+        </button>
       </div>
       <dialog id="my_modal_1" class="modal">
         <div class="modal-box">
           <h3 class="text-lg font-bold">Masih belom selesai</h3>
-          <p class="py-4">Jangan pikir saya ngerjain semua sampai checkout, capek tau</p>
+          <p class="py-4">
+            Jangan pikir saya ngerjain semua sampai checkout, capek tau
+          </p>
           <div class="modal-action">
             <form method="dialog">
               <button class="btn btn-ghost">Tutup</button>

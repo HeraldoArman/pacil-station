@@ -4,7 +4,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 
-class ProductForm(forms.ModelForm):
+class ProductForm(ModelForm):
     class Meta:
         model = Product
         fields = ["name", "price", "description", "thumbnail", "flip_thumbnail", "category", "is_featured", "size", "rating", "stock", "total_sales", "brand"]

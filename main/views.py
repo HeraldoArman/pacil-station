@@ -25,17 +25,20 @@ def show_main(request):
 
 def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
-    related_products = Product.objects.filter(category=product.category).exclude(pk=pk)[:4]
+
     context = {
         "product": product,
-        "related_products": related_products,
     }
     return render(request, "main/product.html", context)
 
+@login_required(login_url='/login/')
+def delete_product(request, pk):
+    product = get_object_or_404(Product, pk=pk, user=request.user)
+    product.delete()
+    return redirect('main:profile')
+
 def add_employee(request):
-    
     employees = Employee.objects.create(name="Aldo", age=20, persona="suka tidur")
-    
     context = {
         "employees" : employees
     }
@@ -74,8 +77,10 @@ def view_json_by_id(request, pk):
     
 def add_product(request):
     form = ProductForm(request.POST or None)
-    if form.is_valid():
-        form.save()
+    if form.is_valid() and request.method == 'POST':
+        product_entry = form.save(commit=False)
+        product_entry.user = request.user
+        product_entry.save()
         return redirect('main:show_main')
     context = {
         "form": form,
@@ -110,7 +115,7 @@ def login_views(request):
     }
     return render(request, 'main/login.html', context)
 
-def register_view(request):
+def register_views(request):
     if request.method == "POST":
         form = RegisterForm(request.POST)
         if form.is_valid():
@@ -127,15 +132,27 @@ def register_view(request):
 @login_required(login_url='/login/')
 def logout_user(request):
     logout(request)
-    response = HttpResponseRedirect(reverse("main:login_user"))
+    response = HttpResponseRedirect(reverse("main:show_main"))
     response.delete_cookie('last_login')
     return redirect('main:show_main')
 
 
 @login_required(login_url='/login/')
-def profile_view(request):
-    last_login = request.COOKIES.get('last_login')
+def profile_views(request):
+    last_login_raw = request.COOKIES.get('last_login', 'Never')
+    if last_login_raw != 'Never':
+        try:
+            last_login_dt = datetime.datetime.fromisoformat(last_login_raw)
+            last_login = last_login_dt.strftime('%A, %d %B %Y %H:%M:%S')
+        except Exception:
+            last_login = last_login_raw
+    else:
+        last_login = 'Never'
+        
+        
+    my_product = Product.objects.filter(user=request.user)
     context = {
         'last_login': last_login,
+        'products' : my_product,
     }
     return render(request, 'main/profile.html', context)
