@@ -1,10 +1,11 @@
 from django.forms import ModelForm
 from .models import Product
-
 from django import forms
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.models import User
 from .models import Product, Car
 
-class ProductForm(forms.ModelForm):
+class ProductForm(ModelForm):
     class Meta:
         model = Product
         fields = ["name", "price", "description", "thumbnail", "flip_thumbnail", "category", "is_featured", "size", "rating", "stock", "total_sales", "brand"]
@@ -36,6 +37,61 @@ class BrandForm(ModelForm):
             "name": forms.TextInput(attrs={"class": "input input-bordered w-full"}),
         }
         
+
+class LoginForm(AuthenticationForm):
+    username = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "class": "input input-bordered w-full",
+                "placeholder": "Username",
+                "autocomplete": "username",
+            }
+        )
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "input input-bordered w-full",
+                "placeholder": "Password",
+                "autocomplete": "current-password",
+            }
+        )
+    )
+    
+class RegisterForm(UserCreationForm):
+    username = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "class": "input input-bordered w-full",
+                "placeholder": "Username",
+                "autocomplete": "username",
+            }
+        )
+    )
+    password1 = forms.CharField(
+        label="Password",
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "input input-bordered w-full",
+                "placeholder": "Password",
+                "autocomplete": "new-password",
+            }
+        )
+    )
+    password2 = forms.CharField(
+        label="Confirm Password",
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "input input-bordered w-full",
+                "placeholder": "Confirm Password",
+                "autocomplete": "new-password",
+            }
+        )
+    )
+
+    class Meta:
+        model = User
+        fields = ["username", "password1", "password2"]
 class CarForm(ModelForm):
     class Meta:
         model = Car

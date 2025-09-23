@@ -1,0 +1,100 @@
+{% extends 'base.html' %} {% block meta %}
+<title>Register - Pacil Station</title>
+{% endblock meta %} {% block content %}
+<div class="flex justify-center items-center py-10">
+  <div class="card w-md max-w-md bg-base-100 shadow-xl min-w-xs">
+    <div class="card-body">
+      <h1 class="text-3xl font-bold text-center mb-6">Register</h1>
+
+      <form method="POST" action="" class="space-y-4" novalidate>
+        {% csrf_token %}
+
+        <div class="form-control">
+          <label class="label"
+            ><span class="label-text font-semibold"
+              >{{ form.username.label }}</span
+            ></label
+          >
+          {{ form.username }} {% if form.username.errors %}
+          <p class="text-error text-sm mt-1">
+            {{ form.username.errors|striptags }}
+          </p>
+          {% endif %}
+        </div>
+
+        <div class="form-control">
+          <label class="label"
+            ><span class="label-text font-semibold"
+              >{{ form.password1.label }}</span
+            ></label
+          >
+          {{ form.password1 }} {% if form.password1.errors %}
+          <p class="text-error text-sm mt-1">
+            {{ form.password1.errors|striptags }}
+          </p>
+          {% endif %}
+        </div>
+        <div class="form-control">
+            <label class="label"
+              ><span class="label-text font-semibold"
+                >{{ form.password2.label }}</span
+              ></label
+            >
+            {{ form.password2 }} {% if form.password2.errors %}
+            <p class="text-error text-sm mt-1">
+              {{ form.password2.errors|striptags }}
+            </p>
+            {% endif %}
+          </div>
+
+        {% if form.non_field_errors %}
+        <div role="alert" class="alert alert-error alert-soft">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 shrink-0 stroke-current"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <span>{{ form.non_field_errors|striptags }}</span>
+        </div>
+        {% endif %} {% if messages %} {% for message in messages %}
+        <div role="alert" class="alert alert-{{ message.tags }} alert-soft">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 shrink-0 stroke-current"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <span>{{ message }}</span>
+        </div>
+        {% endfor %} {% endif %}
+
+        <div class="form-control mt-6">
+          <button type="submit" class="btn btn-primary w-full">Register</button>
+        </div>
+      </form>
+
+      <p class="text-center mt-4">
+        Already have an account?
+        <a href="{% url 'main:register' %}" class="link link-primary font-bold"
+          >Login now</a
+        >
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock content %}

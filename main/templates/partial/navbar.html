@@ -27,12 +27,12 @@
         </a>
 
         <nav class="hidden sm:flex gap-6 text-black/60 items-center">
-          <a href="{% url 'main:add_product' %}" class="hover:text-black transition-colors">Add Product</a>
-
-          <a href="/#all-products" class="hover:text-black transition-colors">All Product</a>
+          <a href="/#all-products" class="hover:text-black transition-colors"
+            >All Product</a
+          >
           <a
             href="/#featured-products"
-            class="bg-black text-white px-4 py-2 rounded-lg font-medium inline-flex justify-center tracking-tight hover:bg-gray-800 transition-colors"
+            class="hover:text-black transition-colors"
           >
           <button >
 
@@ -47,18 +47,25 @@
                 height="12px"
                 class="inline-block h-2 w-2 fill-current opacity-60"
                 xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 2048 2048">
-                <path d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"></path>
+                viewBox="0 0 2048 2048"
+              >
+                <path
+                  d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"
+                ></path>
               </svg>
             </div>
-            <ul tabindex="0" class="dropdown-content bg-base-300 rounded-box z-1 w-52 p-2 shadow-2xl">
+            <ul
+              tabindex="0"
+              class="dropdown-content bg-base-300 rounded-box z-1 w-52 p-2 shadow-2xl"
+            >
               <li>
                 <input
                   type="radio"
                   name="theme-dropdown"
                   class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
                   aria-label="Light"
-                  value="light" />
+                  value="light"
+                />
               </li>
               <li>
                 <input
@@ -66,7 +73,8 @@
                   name="theme-dropdown"
                   class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
                   aria-label="Winter"
-                  value="winter" />
+                  value="winter"
+                />
               </li>
               <li>
                 <input
@@ -74,7 +82,8 @@
                   name="theme-dropdown"
                   class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
                   aria-label="Pastel"
-                  value="pastel" />
+                  value="pastel"
+                />
               </li>
               <li>
                 <input
@@ -82,7 +91,8 @@
                   name="theme-dropdown"
                   class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
                   aria-label="Fantasy"
-                  value="fantasy" />
+                  value="fantasy"
+                />
               </li>
               <li>
                 <input
@@ -90,7 +100,8 @@
                   name="theme-dropdown"
                   class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
                   aria-label="Acid"
-                  value="acid" />
+                  value="acid"
+                />
               </li>
               <li>
                 <input
@@ -98,12 +109,59 @@
                   name="theme-dropdown"
                   class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
                   aria-label="Silk"
-                  value="silk" />
+                  value="silk"
+                />
               </li>
             </ul>
           </div>
+
+          {% if user.is_authenticated %}
+          <div class="dropdown dropdown-end">
+            <div tabindex="0" role="button" class="hover:cursor-pointer">
+              <div class="avatar avatar-placeholder">
+                <div
+                  class="bg-neutral text-neutral-content w-8 h-8 rounded-full flex items-center justify-center"
+                >
+                  <span class="text-sm">{{ user.username|first|upper }}</span>
+                </div>
+              </div>
+            </div>
+            <ul
+              tabindex="0"
+              class="menu dropdown-content bg-base-200 rounded-box z-1 mt-4 w-52 p-2 shadow-sm"
+            >
+              <li>
+                <a
+                  href="{% url 'main:profile' %}"
+                  class="hover:bg-base-300 rounded-md px-3 py-2 transition-colors"
+                  >Profile</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{% url 'main:add_product' %}"
+                  class="hover:bg-base-300 rounded-md px-3 py-2 transition-colors"
+                  >Add New Product</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{% url 'main:logout' %}"
+                  class="hover:bg-red-100 text-red-600 rounded-md px-3 py-2 transition-colors"
+                  >Logout</a
+                >
+              </li>
+            </ul>
+          </div>
+          {% else %}
+          <a
+            href="{% url 'main:login' %}"
+            class="bg-black text-white px-4 py-2 rounded-lg font-medium inline-flex justify-center tracking-tight hover:bg-gray-800 transition-colors"
+          >
+            Login
+          </a>
+          {% endif %}
         </nav>
-        
       </div>
     </div>
   </div>
@@ -115,25 +173,24 @@
 </header>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-
-    const savedTheme = localStorage.getItem('theme') || 'winter';
-    document.documentElement.setAttribute('data-theme', savedTheme);
+  document.addEventListener("DOMContentLoaded", function () {
+    const savedTheme = localStorage.getItem("theme") || "winter";
+    document.documentElement.setAttribute("data-theme", savedTheme);
 
     const themeRadio = document.querySelector(`input[value="${savedTheme}"]`);
     if (themeRadio) {
       themeRadio.checked = true;
     }
-    
-    const themeControllers = document.querySelectorAll('.theme-controller');
-    themeControllers.forEach(controller => {
-      controller.addEventListener('change', function() {
+
+    const themeControllers = document.querySelectorAll(".theme-controller");
+    themeControllers.forEach((controller) => {
+      controller.addEventListener("change", function () {
         if (this.checked) {
           const theme = this.value;
-          document.documentElement.setAttribute('data-theme', theme);
-          localStorage.setItem('theme', theme);
+          document.documentElement.setAttribute("data-theme", theme);
+          localStorage.setItem("theme", theme);
         }
       });
     });
   });
-  </script>
+</script>

@@ -1,0 +1,56 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="container mx-auto py-12 w-6xl max-w-full min-w-xs px-4">
+  <div class="divider mb-12 text-3xl font-bold text-center justify-center">My Profile</div>
+
+  <div class="text-center mb-8">
+    <p class="text-gray-600">
+        <div class="space-y-2"> 
+            <p>
+                Username: <span class="font-semibold">{{ user.username }}</span>
+            </p>
+            <p>
+                Last Login: <span class="font-semibold">{{ last_login }}</span>
+            </p>
+        </div>
+    </p>
+  </div>
+
+  <div class="divider mb-12 text-3xl font-bold text-center justify-center">
+    My Products
+  </div>
+
+  <div class="relative">
+    <div class="flex flex-wrap gap-6 items-center justify-center">
+      {% for product in products %}
+        {% include "components/small_card.html" with product=product image_url=product.thumbnail title=product.title %}
+      {% empty %}
+      <div>
+          <p class="text-center w-full">No products available.</p>
+          <div class="flex justify-center mt-6">
+              <a class="btn btn-neutral" href="{% url 'main:add_product' %}">
+                  <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-plus-icon lucide-plus"
+                  >
+                  <path d="M5 12h14" />
+                  <path d="M12 5v14" />
+                </svg>
+                Create a new product
+            </a>
+        </div>
+        </div>  
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

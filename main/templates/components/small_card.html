@@ -1,14 +1,13 @@
 <div class="card bg-base-100 w-60 md:w-56 shadow-sm">
   <figure class="w-full overflow-hidden">
     <div class="relative w-full aspect-[4/3]">
-      <img 
-        src="{{ product.thumbnail|default:image_url }}" 
-        alt="{{ product.name|default:title }}" 
-        class="absolute inset-0 w-full h-full object-cover {% if product.flip_thumbnail %} -scale-x-100{% endif %}" 
+      <img
+        src="{{ product.thumbnail|default:image_url }}"
+        alt="{{ product.name|default:title }}"
+        class="absolute inset-0 w-full h-full object-cover {% if product.flip_thumbnail %} -scale-x-100{% endif %}"
       />
     </div>
   </figure>
-
 
   <div class="card-body p-4 gap-2">
     <h2 class="card-title text-lg leading-snug mb-1">
@@ -16,31 +15,36 @@
     </h2>
     <div class="flex flex-wrap gap-1 text-xs mb-1">
       {% if product.brand %}
-        <span class="badge badge-outline">{{ product.brand.name }}</span>
-      {% endif %}
-      {% if product.category %}
-        <span class="badge badge-neutral">{{ product.category }}</span>
-      {% endif %}
-      {% if product.rating %}
+      <span class="badge badge-outline">{{ product.brand.name }}</span>
+      {% endif %} {% if product.category %}
+      <span class="badge badge-neutral">{{ product.category }}</span>
+      {% endif %} {% if product.rating %}
       <div class="flex gap-1 text-warning items-center ml-1">
         {% with r=product.rating|floatformat:1 %}
         <svg class="w-3 h-3 fill-current" viewBox="0 0 20 20">
-          <path d="M10 15.27L16.18 19l-1.64-7.03L20 7.24l-7.19-.61L10 0 7.19 6.63 0 7.24l5.46 4.73L3.82 19z"/>
+          <path
+            d="M10 15.27L16.18 19l-1.64-7.03L20 7.24l-7.19-.61L10 0 7.19 6.63 0 7.24l5.46 4.73L3.82 19z"
+          />
         </svg>
         <span class="text-[10px] text-base-content/70">({{ r }})</span>
         {% endwith %}
       </div>
-    {% endif %}
+      {% endif %}
     </div>
 
     {% if product.price %}
-      <div class="text-sm font-semibold">
-        Rp {{ product.price|floatformat:0 }}
-      </div>
+    <div class="text-sm font-semibold">
+      Rp {{ product.price|floatformat:0 }}
+    </div>
     {% endif %}
 
     <div class="card-actions justify-end mt-1">
-      <a href={{ product.id }} class="btn btn-primary btn-sm px-5">Beli</a>
+      {% if user.is_authenticated and product.user == user %}
+      <a href="/{{ product.id }}" class="btn btn-primary btn-sm px-5">Detail</a>
+
+      {% else %}
+      <a href="/{{ product.id }}" class="btn btn-primary btn-sm px-5">Beli</a>
+      {% endif %}
     </div>
   </div>
 </div>
