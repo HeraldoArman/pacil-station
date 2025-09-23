@@ -3,6 +3,7 @@ from .models import Product
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
+from .models import Product, Car
 
 class ProductForm(ModelForm):
     class Meta:
@@ -91,3 +92,7 @@ class RegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ["username", "password1", "password2"]
+class CarForm(ModelForm):
+    class Meta:
+        model = Car
+        fields = ["name", "brand", "stock"]

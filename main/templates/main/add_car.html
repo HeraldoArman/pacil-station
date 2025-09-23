@@ -1,0 +1,27 @@
+{% extends 'base.html' %} {% block content %}
+<div class="flex justify-center items-center py-10">
+  <div class="card w-full max-w-lg bg-base-100 shadow-xl">
+    <div class="card-body">
+      <h1 class="text-3xl font-bold text-center mb-6">Add Car</h1>
+
+      <form method="POST" enctype="multipart/form-data" class="space-y-4">
+        {% csrf_token %}
+        <table>
+          {{ form.as_table }}
+          <tr>
+            <td></td>
+            <td>
+              <input type="submit" value="add Car" />
+            </td>
+          </tr>
+        </table>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="flex justify-start mt-6">
+  <a href="{% url 'main:show_main' %}" class="btn btn-ghost">
+    ← Kembali ke Beranda
+  </a>
+</div>
+{% endblock %}
