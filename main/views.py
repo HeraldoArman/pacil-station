@@ -74,20 +74,32 @@ def view_json_by_id(request, pk):
     except Product.DoesNotExist:
         return HttpResponse("Product not found", status=404)
     
-    
+@login_required(login_url='/login/')
 def add_product(request):
     form = ProductForm(request.POST or None)
     if form.is_valid() and request.method == 'POST':
         product_entry = form.save(commit=False)
         product_entry.user = request.user
         product_entry.save()
-        return redirect('main:show_main')
+        return redirect('main:profile')
     context = {
         "form": form,
     }
     return render(request, "main/add_product.html", context)
-    
-    
+
+@login_required(login_url='/login/')
+def edit_product(request, pk):
+    product_data = get_object_or_404(Product, pk=pk, user=request.user)
+    form = ProductForm(request.POST or None, instance=product_data)
+    if form.is_valid() and request.method == 'POST':
+        form.save()
+        return redirect('main:profile')
+    context = {
+        "form": form,
+    }    
+    return render(request, "main/edit_product.html", context)
+
+@login_required(login_url='/login/')
 def add_brand(request):
     form = BrandForm(request.POST or None)
     if form.is_valid():

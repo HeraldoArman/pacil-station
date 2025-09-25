@@ -1,9 +1,18 @@
 <div
-  class="hero min-h-screen rounded-3xl overflow-hidden mb-20 bg-center bg-cover relative"
-  style="
-    background-image: url(https://blogs.bmj.com/bjsm/files/2016/02/running-woman.jpg);
-  "
+  class="hero hero-mobile-shift min-h-screen rounded-3xl overflow-hidden mb-20 bg-cover relative"
+  style="background-image: url(https://blogs.bmj.com/bjsm/files/2016/02/running-woman.jpg);"
 >
+  <style>
+    .hero-mobile-shift {
+      background-position: calc(50% - 100px) center;
+    }
+    /* Balik ke center pada sm ke atas */
+    @media (min-width: 640px) {
+      .hero-mobile-shift {
+        background-position: center center;
+      }
+    }
+  </style>
 
   <div
     class="hero-overlay"
