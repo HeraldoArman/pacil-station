@@ -340,3 +340,20 @@ Langkah yang saya lakukan secara garis besar adalah:
 4. Membuat file html baru dan mengisinya.
 5. Lalu menambahkan sedikit styling untuk mempercantik di forms.py
 6. Lalu menambahkan page baru untuk melihat profile dan data cookies seperti last login
+
+---
+
+# Tugas 4: Implementasi Autentikasi, Session, dan Cookies pada Django
+
+**Nama:** Heraldo Arman  
+**NPM:** 2406420702  
+**Kelas:** PBP - E  
+**Link Penugasan:** [Tugas 4](https://pbp-fasilkom-ui.github.io/ganjil-2026/assignments/individual/assignment-4)  
+**Link Deployment:** [heraldo-arman-pacilstation.pbp.cs.ui.ac.id](https://heraldo-arman-pacilstation.pbp.cs.ui.ac.id/)
+
+---
+
+## 1. Jika terdapat beberapa CSS selector untuk suatu elemen HTML, jelaskan urutan prioritas pengambilan CSS selector tersebut!
+
+
+
