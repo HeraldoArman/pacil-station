@@ -1,42 +1,57 @@
-{% extends 'base.html' %} {% block content %}
-<div class="flex justify-center items-center py-10">
-  <div class="card w-full max-w-lg bg-base-100 shadow-xl w-md min-w-xs">
-    <div class="card-body">
-      <h1 class="text-3xl font-bold text-center mb-6">Add Brand</h1>
+{% extends 'base.html' %} 
 
-      <form method="POST" enctype="multipart/form-data" class="space-y-4">
-        {% csrf_token %} {% for field in form %}
+{% block meta %}
+<title>Add Brand - Pacil Station</title>
+{% endblock meta %}
+
+{% block content %}
+<div class="flex  py-4 sm:py-8 lg:py-10 px-4 sm:px-6">
+  <div class="card w-full max-w-sm sm:max-w-md lg:max-w-lg bg-base-100 shadow-xl">
+    <div class="card-body p-4 sm:p-6 lg:p-8">
+      <h1 class="text-2xl sm:text-3xl font-bold text-center mb-4 sm:mb-6">Add Brand</h1>
+
+      <form method="POST" enctype="multipart/form-data" class="space-y-3 sm:space-y-4">
+        {% csrf_token %} 
+        
+        {% for field in form %}
         <div class="form-control">
           <label class="label">
-            <span class="label-text font-semibold">{{ field.label }}</span>
+            <span class="label-text font-semibold text-sm sm:text-base">{{ field.label }}</span>
           </label>
 
-          {{ field }} {% if field.errors %}
-          <p class="text-error text-sm mt-1">{{ field.errors|striptags }}</p>
+          <div class="w-full">
+            {{ field }}
+          </div>
+          
+          {% if field.errors %}
+          <p class="text-error text-xs sm:text-sm mt-1">{{ field.errors|striptags }}</p>
           {% endif %}
         </div>
         {% endfor %}
-        <div class="mt-2 text-sm">
+        
+        <div class="mt-2 text-xs sm:text-sm">
           Want to add Product? Click
           <a
             href="{% url 'main:add_product' %}"
             class="link link-primary font-bold"
-            >here</a
-          >
+          >here</a>
           to add new product
         </div>
-        <div class="form-control mt-6">
-          <button type="submit" class="btn btn-primary w-full">
-            Add Product
+        
+        <div class="form-control mt-4 sm:mt-6">
+          <button type="submit" class="btn btn-primary w-full text-sm sm:text-base py-2 sm:py-3">
+            Add Brand
           </button>
         </div>
       </form>
     </div>
   </div>
 </div>
-<div class="flex justify-start mt-6">
-  <a href="{% url 'main:show_main' %}" class="btn btn-ghost">
-    ← Kembali ke Beranda
+
+<div class="mt-4 sm:mt-6 lg:mt-8 px-4 sm:px-6">
+  <a href="{% url 'main:show_main' %}" class="btn btn-ghost text-sm sm:text-base">
+    <span class="gap-2">←</span>
+    Kembali ke Beranda
   </a>
 </div>
 {% endblock %}

@@ -1,40 +1,50 @@
 {% extends 'base.html' %} 
 {% block meta %}
-
 <title>Add Product - Pacil Station</title>
 {% endblock meta %}
 
 {% block content %}
-<div class="flex justify-center items-center py-10">
-  <div class="card w-full max-w-3xl bg-base-100 shadow-xl w-xl min-w-xs">
-    <div class="card-body">
-      <h1 class="text-3xl font-bold text-center mb-6">Add Product</h1>
+<div class="flex justify-center items-center py-4 sm:py-8 lg:py-10 px-4 sm:px-6">
+  <div class="card w-full max-w-sm sm:max-w-md md:max-w-2xl lg:max-w-3xl xl:max-w-4xl bg-base-100 shadow-xl">
+    <div class="card-body p-4 sm:p-6 lg:p-8">
+      <h1 class="text-2xl sm:text-3xl font-bold text-center mb-4 sm:mb-6">Add Product</h1>
 
-      <form method="POST" enctype="multipart/form-data" class="space-y-4">
-        {% csrf_token %} {% for field in form %}
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text font-semibold">{{ field.label }}</span>
-          </label>
+      <form method="POST" enctype="multipart/form-data" class="space-y-3 sm:space-y-4">
+        {% csrf_token %} 
+        
+        <!-- Grid layout for larger screens -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 lg:gap-6">
+          {% for field in form %}
+          <div class="form-control {% if field.name == 'description' %}lg:col-span-2{% endif %}">
+            <label class="label">
+              <span class="label-text font-semibold text-sm sm:text-base">{{ field.label }}</span>
+            </label>
 
-          {{ field }} {% if field.errors %}
-          <p class="text-error text-sm mt-1">{{ field.errors|striptags }}</p>
-          {% endif %} {% if field.name == "brand" %}
-          <div class="mt-2 text-sm">
-            Don't find any brand you want? Click
-            <a
-              href="{% url 'main:add_brand' %}"
-              class="link link-primary font-bold"
-              >here</a
-            >
-            to add new brand
+            <div class="w-full">
+              {{ field }}
+            </div>
+            
+            {% if field.errors %}
+            <p class="text-error text-xs sm:text-sm mt-1">{{ field.errors|striptags }}</p>
+            {% endif %} 
+            
+            {% if field.name == "brand" %}
+            <div class="mt-2 text-xs sm:text-sm">
+              Don't find any brand you want? Click
+              <a
+                href="{% url 'main:add_brand' %}"
+                class="link link-primary font-bold"
+                >here</a
+              >
+              to add new brand
+            </div>
+            {% endif %}
           </div>
-          {% endif %}
+          {% endfor %}
         </div>
-        {% endfor %}
 
-        <div class="form-control mt-6">
-          <button type="submit" class="btn btn-primary w-full">
+        <div class="form-control mt-4 sm:mt-6">
+          <button type="submit" class="btn btn-primary w-full text-sm sm:text-base py-2 sm:py-3">
             Add Product
           </button>
         </div>
@@ -43,8 +53,8 @@
   </div>
 </div>
 
-<div class="mt-8">
-  <a href="{% url 'main:show_main' %}" class="btn btn-ghost">
+<div class="mt-4 sm:mt-6 lg:mt-8 px-4 sm:px-6">
+  <a href="{% url 'main:show_main' %}" class="btn btn-ghost text-sm sm:text-base">
     <span class="gap-2"> ← </span>
     Kembali ke Beranda
   </a>

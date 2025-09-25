@@ -1,11 +1,10 @@
 <header class="sticky top-0 backdrop-blur-sm z-50">
-  <div class="py-5">
-    <div class="container px-5 max-w-7xl mx-auto">
+  <div class="py-3 sm:py-5">
+    <div class="container px-4 sm:px-5 max-w-7xl mx-auto">
       <div class="flex items-center justify-between w-full">
         <a href="/" class="flex items-center gap-2">
           <svg
-            width="15%"
-            height="15%"
+            class="w-6 h-6 sm:w-8 sm:h-8"
             viewBox="0 0 53 43"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -23,95 +22,32 @@
               fill="#FF4D00"
             ></path>
           </svg>
-          <span class="text-lg font-bold text-black">Pacil Station</span>
+          <span class="text-base sm:text-lg font-bold text-black">Pacil Station</span>
         </a>
 
-        <nav class="hidden sm:flex gap-6 text-black/60 items-center">
-          <a href="/#all-products" class="hover:text-black transition-colors"
-            >All Product</a
-          >
-          <a
-            href="/#featured-products"
-            class="hover:text-black transition-colors"
-          >
-          <button >
+        <button id="mobile-menu-button" class="sm:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors">
+          <svg id="hamburger-icon" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/></svg>
+        </button>
 
-            Featured
-          </button>
-          </a>
+        <!-- Desktop Navigation -->
+        <nav class="hidden sm:flex gap-4 lg:gap-6 text-black/60 items-center">
+          <a href="/#all-products" class="hover:text-black transition-colors text-sm lg:text-base">All Product</a>
+          <a href="/#featured-products" class="hover:text-black transition-colors text-sm lg:text-base">Featured</a>
+          
           <div class="dropdown">
-            <div tabindex="0" role="button" class="btn m-1">
+            <div tabindex="0" role="button" class="btn btn-sm m-1">
               Theme
-              <svg
-                width="12px"
-                height="12px"
-                class="inline-block h-2 w-2 fill-current opacity-60"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 2048 2048"
-              >
-                <path
-                  d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"
-                ></path>
+              <svg width="12px" height="12px" class="inline-block h-2 w-2 fill-current opacity-60" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 2048">
+                <path d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"></path>
               </svg>
             </div>
-            <ul
-              tabindex="0"
-              class="dropdown-content bg-base-300 rounded-box z-1 w-52 p-2 shadow-2xl"
-            >
-              <li>
-                <input
-                  type="radio"
-                  name="theme-dropdown"
-                  class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
-                  aria-label="Light"
-                  value="light"
-                />
-              </li>
-              <li>
-                <input
-                  type="radio"
-                  name="theme-dropdown"
-                  class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
-                  aria-label="Winter"
-                  value="winter"
-                />
-              </li>
-              <li>
-                <input
-                  type="radio"
-                  name="theme-dropdown"
-                  class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
-                  aria-label="Pastel"
-                  value="pastel"
-                />
-              </li>
-              <li>
-                <input
-                  type="radio"
-                  name="theme-dropdown"
-                  class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
-                  aria-label="Fantasy"
-                  value="fantasy"
-                />
-              </li>
-              <li>
-                <input
-                  type="radio"
-                  name="theme-dropdown"
-                  class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
-                  aria-label="Acid"
-                  value="acid"
-                />
-              </li>
-              <li>
-                <input
-                  type="radio"
-                  name="theme-dropdown"
-                  class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
-                  aria-label="Silk"
-                  value="silk"
-                />
-              </li>
+            <ul tabindex="0" class="dropdown-content bg-base-300 rounded-box z-1 w-52 p-2 shadow-2xl">
+              <li><input type="radio" name="theme-dropdown" class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start" aria-label="Light" value="light" /></li>
+              <li><input type="radio" name="theme-dropdown" class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start" aria-label="Winter" value="winter" /></li>
+              <li><input type="radio" name="theme-dropdown" class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start" aria-label="Pastel" value="pastel" /></li>
+              <li><input type="radio" name="theme-dropdown" class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start" aria-label="Fantasy" value="fantasy" /></li>
+              <li><input type="radio" name="theme-dropdown" class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start" aria-label="Acid" value="acid" /></li>
+              <li><input type="radio" name="theme-dropdown" class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start" aria-label="Silk" value="silk" /></li>
             </ul>
           </div>
 
@@ -119,69 +55,97 @@
           <div class="dropdown dropdown-end">
             <div tabindex="0" role="button" class="hover:cursor-pointer">
               <div class="avatar avatar-placeholder">
-                <div
-                  class="bg-neutral text-neutral-content w-8 h-8 rounded-full flex items-center justify-center"
-                >
+                <div class="bg-neutral text-neutral-content w-8 h-8 rounded-full flex items-center justify-center">
                   <span class="text-sm">{{ user.username|first|upper }}</span>
                 </div>
               </div>
             </div>
-            <ul
-              tabindex="0"
-              class="menu dropdown-content bg-base-200 rounded-box z-1 mt-4 w-52 p-2 shadow-sm"
-            >
-              <li>
-                <a
-                  href="{% url 'main:profile' %}"
-                  class="hover:bg-base-300 rounded-md px-3 py-2 transition-colors"
-                  >Profile</a
-                >
-              </li>
-              <li>
-                <a
-                  href="{% url 'main:add_product' %}"
-                  class="hover:bg-base-300 rounded-md px-3 py-2 transition-colors"
-                  >Add New Product</a
-                >
-              </li>
-              <li>
-                <a
-                  href="{% url 'main:logout' %}"
-                  class="hover:bg-red-100 text-red-600 rounded-md px-3 py-2 transition-colors"
-                  >Logout</a
-                >
-              </li>
+            <ul tabindex="0" class="menu dropdown-content bg-base-200 rounded-box z-1 mt-4 w-52 p-2 shadow-sm">
+              <li><a href="{% url 'main:profile' %}" class="hover:bg-base-300 rounded-md px-3 py-2 transition-colors">Profile</a></li>
+              <li><a href="{% url 'main:add_product' %}" class="hover:bg-base-300 rounded-md px-3 py-2 transition-colors">Add New Product</a></li>
+              <li><a href="{% url 'main:logout' %}" class="hover:bg-red-100 text-red-600 rounded-md px-3 py-2 transition-colors">Logout</a></li>
             </ul>
           </div>
           {% else %}
-          <a
-            href="{% url 'main:login' %}"
-            class="bg-black text-white px-4 py-2 rounded-lg font-medium inline-flex justify-center tracking-tight hover:bg-gray-800 transition-colors"
-          >
-            Login
-          </a>
+          <a href="{% url 'main:login' %}" class="bg-black text-white px-3 py-2 lg:px-4 rounded-lg font-medium inline-flex justify-center tracking-tight hover:bg-gray-800 transition-colors text-sm lg:text-base">Login</a>
           {% endif %}
         </nav>
       </div>
     </div>
   </div>
 
-  <div
-    id="overlay"
-    class="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 hidden md:hidden"
-  ></div>
+  <!-- Mobile Navigation Menu -->
+  <div id="mobile-menu" class="sm:hidden hidden bg-white/95 backdrop-blur-sm border-t border-gray-200">
+    <div class="container px-4 py-4 max-w-7xl mx-auto">
+      <nav class="flex flex-col space-y-4">
+        <a href="/#all-products" class="text-black/60 hover:text-black transition-colors py-2">All Product</a>
+        <a href="/#featured-products" class="text-black/60 hover:text-black transition-colors py-2">Featured</a>
+        
+        <!-- Theme Selector for Mobile -->
+        <div class="dropdown">
+          <div tabindex="0" role="button" class="btn btn-sm m-1">
+            Theme
+            <svg width="12px" height="12px" class="inline-block h-2 w-2 fill-current opacity-60" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 2048">
+              <path d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"></path>
+            </svg>
+          </div>
+          <ul tabindex="0" class="dropdown-content bg-base-300 rounded-box z-1 w-52 p-2 shadow-2xl">
+            <li><input type="radio" name="theme-dropdown" class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start" aria-label="Light" value="light" /></li>
+            <li><input type="radio" name="theme-dropdown" class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start" aria-label="Winter" value="winter" /></li>
+            <li><input type="radio" name="theme-dropdown" class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start" aria-label="Pastel" value="pastel" /></li>
+            <li><input type="radio" name="theme-dropdown" class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start" aria-label="Fantasy" value="fantasy" /></li>
+            <li><input type="radio" name="theme-dropdown" class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start" aria-label="Acid" value="acid" /></li>
+            <li><input type="radio" name="theme-dropdown" class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start" aria-label="Silk" value="silk" /></li>
+          </ul>
+        </div>
+
+        {% if user.is_authenticated %}
+        <div class="border-t border-gray-200 pt-4 mt-4">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="avatar avatar-placeholder">
+              <div class="bg-neutral text-neutral-content w-8 h-8 rounded-full flex items-center justify-center">
+                <span class="text-sm">{{ user.username|first|upper }}</span>
+              </div>
+            </div>
+            <span class="font-medium text-black">
+              <a href="{% url 'main:profile' %}">
+                {{ user.username }}
+
+              </a>
+            </span>
+          </div>
+          <div class="flex flex-col space-y-2">
+            {% comment %} <a href="{% url 'main:profile' %}" class="text-black/60 hover:text-black transition-colors py-2">Profile</a> {% endcomment %}
+            <a href="{% url 'main:add_product' %}" class="text-black/60 hover:text-black transition-colors py-2">Add New Product</a>
+            <a href="{% url 'main:logout' %}" class="text-red-600 hover:text-red-700 transition-colors py-2">Logout</a>
+          </div>
+        </div>
+        {% else %}
+        <div class="pt-4 border-t border-gray-200 mt-4">
+          <a href="{% url 'main:login' %}" class="bg-black text-white px-4 py-3 rounded-lg font-medium inline-flex justify-center tracking-tight hover:bg-gray-800 transition-colors w-full">Login</a>
+        </div>
+        {% endif %}
+      </nav>
+    </div>
+  </div>
+
+  {% comment %} <div id="overlay" class="fixed inset-0 bg-white/20 z-40 hidden"></div> {% endcomment %}
 </header>
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
+    // Theme Management
     const savedTheme = localStorage.getItem("theme") || "winter";
     document.documentElement.setAttribute("data-theme", savedTheme);
 
-    const themeRadio = document.querySelector(`input[value="${savedTheme}"]`);
-    if (themeRadio) {
-      themeRadio.checked = true;
-    }
+    // Set initial theme for both desktop and mobile
+    const themeRadio = document.querySelector(`input.theme-controller[value="${savedTheme}"]`);
+    if (themeRadio) themeRadio.checked = true;
+    
+    const themeMobileRadio = document.querySelector(`input.theme-controller-mobile[value="${savedTheme}"]`);
+    if (themeMobileRadio) themeMobileRadio.checked = true;
 
+    // Desktop theme controllers
     const themeControllers = document.querySelectorAll(".theme-controller");
     themeControllers.forEach((controller) => {
       controller.addEventListener("change", function () {
@@ -189,7 +153,45 @@
           const theme = this.value;
           document.documentElement.setAttribute("data-theme", theme);
           localStorage.setItem("theme", theme);
+          // Sync with mobile theme selector
+          const mobileTheme = document.querySelector(`input.theme-controller-mobile[value="${theme}"]`);
+          if (mobileTheme) mobileTheme.checked = true;
         }
+      });
+    });
+
+
+    const mobileMenuButton = document.getElementById("mobile-menu-button");
+    const mobileMenu = document.getElementById("mobile-menu");
+    const overlay = document.getElementById("overlay");
+    const hamburgerIcon = document.getElementById("hamburger-icon");
+
+
+    function toggleMobileMenu() {
+      mobileMenu.classList.toggle("hidden");
+      overlay.classList.toggle("hidden");
+      hamburgerIcon.classList.toggle("hidden");
+
+      document.body.classList.toggle("overflow-hidden");
+    }
+
+    if (mobileMenuButton) {
+      mobileMenuButton.addEventListener("click", toggleMobileMenu);
+    }
+
+    // Close menu when clicking overlay
+    if (overlay) {
+      overlay.addEventListener("click", toggleMobileMenu);
+    }
+
+    // Close menu when clicking menu links
+    const mobileMenuLinks = mobileMenu?.querySelectorAll("a");
+    mobileMenuLinks?.forEach(link => {
+      link.addEventListener("click", () => {
+        mobileMenu.classList.add("hidden");
+        overlay.classList.add("hidden");
+        hamburgerIcon.classList.remove("hidden");
+        document.body.classList.remove("overflow-hidden");
       });
     });
   });
