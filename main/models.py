@@ -52,3 +52,15 @@ class Car(models.Model):
     brand = models.CharField(max_length=255)
     stock = models.IntegerField()
     
+    
+class Book(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=255)
+    
+class Author(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    bio = models.TextField()
+    books = models.ManyToManyField(Book, related_name="authors")
+    
+    
