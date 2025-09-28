@@ -318,17 +318,17 @@ Secara _default_, penggunaan _cookies_ tidaklah aman dalam pengembangan web kare
   ```
 - Django memiliki fitur [signed cookies](https://docs.djangoproject.com/en/5.2/topics/signing/) dimana data di cookie tidak bisa diubah sembarangan oleh client tanpa terdeteksi.
 - Django memiliki fitur session ID di cookie secara default, sementara data disimpan di session disimpan di dalam server. Secara default memiliki settingan sebagai berikut
-    ```python
-    SESSION_COOKIE_HTTPONLY = True # cookie tidak bisa diakses JS, sumber: https://docs.djangoproject.com/en/5.2/ref/settings/#std-setting-SESSION_COOKIE_HTTPONLY
-    SESSION_COOKIE_SECURE = False # bisa diaktifkan untuk HTTPS, sumber: https://docs.djangoproject.com/en/5.2/ref/settings/#session-cookie-secure
-    SESSION_COOKIE_SAMESITE = 'Lax' # membantu mencegah CSRF, sumber: https://docs.djangoproject.com/en/5.2/ref/settings/#session-cookie-samesite
 
-    ```
+  ```python
+  SESSION_COOKIE_HTTPONLY = True # cookie tidak bisa diakses JS, sumber: https://docs.djangoproject.com/en/5.2/ref/settings/#std-setting-SESSION_COOKIE_HTTPONLY
+  SESSION_COOKIE_SECURE = False # bisa diaktifkan untuk HTTPS, sumber: https://docs.djangoproject.com/en/5.2/ref/settings/#session-cookie-secure
+  SESSION_COOKIE_SAMESITE = 'Lax' # membantu mencegah CSRF, sumber: https://docs.djangoproject.com/en/5.2/ref/settings/#session-cookie-samesite
 
+  ```
 
 ---
 
-## 5. Jelaskan bagaimana cara kamu mengimplementasikan *checklist* di atas secara *step-by-step* (bukan hanya sekadar mengikuti tutorial).
+## 5. Jelaskan bagaimana cara kamu mengimplementasikan _checklist_ di atas secara _step-by-step_ (bukan hanya sekadar mengikuti tutorial).
 
 Selain mengikuti tutorial, saya juga bereksperimen dengan beberapa hal tambahan. Saya membaca [dokumentasi resmi](https://docs.djangoproject.com/en/5.2/topics/auth/default/), tutorial eksternal seperti [w3school](https://www.w3schools.com/django/), dan juga sesekali bertanya ke LLM untuk debugging error.
 
@@ -340,3 +340,208 @@ Langkah yang saya lakukan secara garis besar adalah:
 4. Membuat file html baru dan mengisinya.
 5. Lalu menambahkan sedikit styling untuk mempercantik di forms.py
 6. Lalu menambahkan page baru untuk melihat profile dan data cookies seperti last login
+
+---
+
+# Tugas 5: Desain Web menggunakan HTML, CSS dan Framework CSS
+
+**Nama:** Heraldo Arman  
+**NPM:** 2406420702  
+**Kelas:** PBP - E  
+**Link Penugasan:** [Tugas 5](https://pbp-fasilkom-ui.github.io/ganjil-2026/assignments/individual/assignment-5)  
+**Link Deployment:** [heraldo-arman-pacilstation.pbp.cs.ui.ac.id](https://heraldo-arman-pacilstation.pbp.cs.ui.ac.id/)
+
+---
+
+## 1. Jika terdapat beberapa CSS selector untuk suatu elemen HTML, jelaskan urutan prioritas pengambilan CSS selector tersebut!
+
+diurutkan dari paling prioritas terlebih dahulu
+
+1. **`!important`**  
+   Aturan dengan `!important` akan selalu menang, karena sesuai namanya `!important`
+
+2. **Inline Style**  
+   CSS yang ditulis langsung pada elemen menggunakan atribut `style="..."` memiliki prioritas lebih tinggi dibandingkan selector biasa.
+
+3. **Spesifisitas Selector**  
+   Jika tidak ada `!important` atau inline style, maka urutan spesifisitas selector berlaku:
+
+   - **ID Selector** (`#id`) — paling kuat
+   - **Class, Attribute, dan Pseudo-class** (`.class`, `[attr]`, `:hover`)
+   - **Element dan Pseudo-element** (`div`, `h1`, `::before`)
+
+4. **Urutan Deklarasi**  
+   Jika dua aturan memiliki spesifisitas yang sama, maka aturan yang ditulis terakhir di file CSS yang akan diterapkan.
+
+**Contoh urutan prioritas:**
+
+```
+!important > Inline style > ID > Class/attribute/pseudo-class > Element/pseudo-element > Urutan terakhir
+```
+
+### **Contoh:**
+
+```html
+<head>
+  <meta charset="UTF-8" />
+  <title>Prioritas CSS</title>
+  <style>
+    p {
+      color: green;
+    }
+    .teks {
+      color: blue;
+    }
+    #khusus {
+      color: red;
+    }
+    .penting {
+      color: purple !important;
+    }
+  </style>
+</head>
+<body>
+  <p>ini hijau</p>
+  <p class="teks">ini biru</p>
+  <p id="khusus" class="teks">ini merah</p>
+  <p id="khusus" class="teks penting">ini ungu</p>
+  <p style="color: brown;">Ini coklat</p>
+</body>
+```
+
+---
+
+## 2. Mengapa _responsive design_ menjadi konsep yang penting dalam pengembangan aplikasi web? Berikan contoh aplikasi yang sudah dan belum menerapkan _responsive design_, serta jelaskan mengapa!
+
+_Responsive design_ penting dalam pengembangan aplikasi web karena pada dasarnya aplikasi web seharusnya bisa diakses oleh berbagai jenis perangkat. User tak hanya mengakses web dari komputer atau laptop, tapi bisa juga lewat smartphone, tablet, dan kadang bisa saja smart tv. Website yang tidak _responsive_ akan memaksa user untuk zoom in dan zoom out secara terus menerus yang mana ini sangat buruk secara User Exeperience (UX).
+
+Contoh website yang _responsive_ adalah [Youtube](https://www.youtube.com/). Jika mencoba membuka youtube di berbagai device, tampilan nya masih nyaman digunakan dan memberikan User Experience (UX) yang masih menyenangkan.
+
+Contoh website yang tidak _responsive_ adalah [SIAKNG](https://academic.ui.ac.id/). Hal ini karena web tersebut hanya memiliki 1 tampilan untuk seluruh ukuran layar. Dan ini akan merepotkan untuk beberapa pengguna.
+
+---
+
+## 3. Jelaskan perbedaan antara _margin_, _border_, dan _padding_, serta cara untuk mengimplementasikan ketiga hal tersebut!
+
+![CSS Box Model](image/margin-border-padding.png)
+Sumber: [badoystudio.com](https://badoystudio.com/wp-content/uploads/2022/10/padding-2-1024x740.png)
+
+### _Margin_
+
+_Margin_ adalah ruang di luar border elemen, yaitu jarak antar elemen. kegunaan utamanya adalah memisahkan elemen satu dengan elemen lain.
+
+```css
+.box {
+  margin: 20px; /* semua sisi */
+  margin-top: 10px; /* atas saja */
+  margin-right: 15px; /* kanan saja */
+}
+```
+
+### _Border_
+
+_Border_ adalah baris yang mengelilingi padding dan content. Biasanya berfungsi untuk memberi batas visual pada elemen.
+
+```css
+.box {
+  border: 2px solid black; /* ketebalan, gaya, warna */
+  border-radius: 10px; /* sudut melengkung */
+}
+```
+
+### _Padding_
+
+_Padding_ adalah ruang antara content (isi) dengan _border_. Biasanya berfungsi untuk memberi “ruang napas” di dalam elemen agar teks/gambar tidak terlalu mepet ke _border_.
+
+```css
+.box {
+  padding: 15px; /* semua sisi */
+  padding-left: 30px; /* kiri saja */
+}
+```
+
+### Contoh implementasi sederhana ketiganya
+
+![Contoh CSS Box Model](image\contoh-margin-border-padding.png)
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      .box {
+        background-color: lightblue;
+        margin: 20px;
+        padding: 15px;
+        border: 3px solid navy;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="box">
+      Ini adalah contoh box dengan margin, border, dan padding.
+    </div>
+  </body>
+</html>
+```
+
+---
+
+## 4. Jelaskan konsep _flex box_ dan _grid layout_ beserta kegunaannya!
+
+### _Flexbox_ (Flexible Box Layout)
+
+- _Flexbox_ digunakan untuk mengatur layout satu dimensi, entah baris (row) atau kolom (column).
+- Elemen anak (flex items) bisa otomatis menyebar, menyusut, atau rata sesuai ruang yang tersedia.
+
+Contoh css sederhana
+```css
+.container {
+  display: flex; /* aktifkan flexbox */
+  flex-direction: row; /* row (default) atau column */
+  justify-content: center; /* posisi horizontal: start, end, center, space-between */
+  align-items: center; /* posisi vertikal: start, end, center, stretch */
+  gap: 10px; /* jarak antar item */
+}
+.item {
+  flex: 1; /* bagi rata sisa ruang */
+}
+```
+
+![Contoh flex](image\flexbox.png)
+Sumber: [GeeksForGeeks](https://www.geeksforgeeks.org/css/comparison-between-css-grid-css-flexbox/)
+
+### CSS _Grid Layout_
+
+- _Grid layout_ digunakan untuk mengatur layout dua dimensi, baris dan kolom sekaligus.
+- Bisa mendefinisikan grid template (baris & kolom), lalu menempatkan item sesuai posisi.
+
+Contoh css sederhana
+```css
+.container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 kolom sama rata */
+  grid-template-rows: auto 200px; /* baris pertama auto, baris kedua fixed 200px */
+  gap: 10px;
+}
+.item {
+  grid-column: span 2; /* item melebar ke 2 kolom */
+}
+```
+![Contoh flex](image\grid.png)
+Sumber: [GeeksForGeeks](https://www.geeksforgeeks.org/css/comparison-between-css-grid-css-flexbox/)
+
+
+---
+
+## 5. Jelaskan bagaimana cara kamu mengimplementasikan _checklist_ di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial)!
+Selain mengikuti tutorial, saya juga bereksperimen dengan beberapa hal tambahan. Saya membaca [dokumentasi resmi tailwindCSS](https://tailwindcss.com/), tutorial eksternal seperti [w3school](https://www.w3schools.com/w3css/defaulT.asp), melihat dokumentasi [DaisyUI](https://daisyui.com/), dan juga sesekali bertanya ke LLM untuk memperbaiki masalah responsiveness.
+
+Langkah yang saya lakukan secara garis besar adalah:
+
+1. Menginstall tailwindcss v4 dan daisyUI via cdn.
+2. Mengubah tampilannya dengan tailwindCSS dan pakai [DaisyUI](https://daisyui.com/).
+3. Membuat tampilannya lebih responsif
+4. Menambahkan edit dan delete product.
+
+---
