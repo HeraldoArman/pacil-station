@@ -1,0 +1,421 @@
+{% comment %} TODO: FIX THIS SHIT {% endcomment %}
+
+{% extends "base.html" %} {% block content %}
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold mb-4">Product Management with AJAX</h1>
+
+    <!-- Add Product Button -->
+    <button id="addProductBtn" class="btn btn-primary mb-4">
+      Add New Product
+    </button>
+
+    <!-- Product List -->
+    <div
+      id="productList"
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+    >
+      <!-- Products will be loaded here -->
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit Product Modal -->
+<dialog id="productModal" class="modal">
+  <div class="modal-box w-11/12 max-w-3xl">
+    <h3 id="modalTitle" class="font-bold text-lg mb-4">Add Product</h3>
+
+    <form id="productForm" class="space-y-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Name</span>
+          </label>
+          <input
+            type="text"
+            id="productName"
+            class="input input-bordered"
+            required
+          />
+        </div>
+
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Price</span>
+          </label>
+          <input
+            type="number"
+            id="productPrice"
+            class="input input-bordered"
+            required
+          />
+        </div>
+
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Category</span>
+          </label>
+          <input
+            type="text"
+            id="productCategory"
+            class="input input-bordered"
+            required
+          />
+        </div>
+
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Stock</span>
+          </label>
+          <input
+            type="number"
+            id="productStock"
+            class="input input-bordered"
+            required
+          />
+        </div>
+
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Rating</span>
+          </label>
+          <input
+            type="number"
+            step="0.1"
+            min="0"
+            max="5"
+            id="productRating"
+            class="input input-bordered"
+          />
+        </div>
+
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Size</span>
+          </label>
+          <input type="text" id="productSize" class="input input-bordered" />
+        </div>
+      </div>
+
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text">Thumbnail URL</span>
+        </label>
+        <input
+          type="url"
+          id="productThumbnail"
+          class="input input-bordered"
+          required
+        />
+      </div>
+
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text">Description</span>
+        </label>
+        <textarea
+          id="productDescription"
+          class="textarea textarea-bordered h-24"
+          required
+        ></textarea>
+      </div>
+
+      <div class="form-control">
+        <label class="cursor-pointer label justify-start gap-2">
+          <input type="checkbox" id="productFeatured" class="checkbox" />
+          <span class="label-text">Featured Product</span>
+        </label>
+      </div>
+
+      <div class="form-control">
+        <label class="cursor-pointer label justify-start gap-2">
+          <input type="checkbox" id="productFlipThumbnail" class="checkbox" />
+          <span class="label-text">Flip Thumbnail</span>
+        </label>
+      </div>
+    </form>
+
+    <div class="modal-action">
+      <button id="saveProductBtn" class="btn btn-primary">Save</button>
+      <button id="cancelBtn" class="btn btn-ghost">Cancel</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    let editingProductId = null;
+
+    // Load products on page load
+    loadProducts();
+
+    // Add product button
+    document
+      .getElementById("addProductBtn")
+      .addEventListener("click", function () {
+        openModal("add");
+      });
+
+    // Cancel button
+    document.getElementById("cancelBtn").addEventListener("click", function () {
+      closeModal();
+    });
+
+    // Save product button
+    document
+      .getElementById("saveProductBtn")
+      .addEventListener("click", function () {
+        if (editingProductId) {
+          updateProduct(editingProductId);
+        } else {
+          createProduct();
+        }
+      });
+
+    function loadProducts() {
+      fetch('{% url "main:get_products_ajax" %}')
+        .then((response) => response.json())
+        .then((data) => {
+          displayProducts(data.products);
+        })
+        .catch((error) => {
+          console.error("Error loading products:", error);
+        });
+    }
+
+    function displayProducts(products) {
+      const productList = document.getElementById("productList");
+      productList.innerHTML = "";
+
+      products.forEach((product) => {
+        const productCard = createProductCard(product);
+        productList.appendChild(productCard);
+      });
+    }
+
+    function createProductCard(product) {
+      const card = document.createElement("div");
+      card.className = "card bg-base-100 shadow-xl";
+      card.innerHTML = `
+            <figure class="w-full overflow-hidden">
+                <div class="relative w-full aspect-[4/3]">
+                    <img src="${product.thumbnail}" alt="${product.name}" 
+                         class="absolute inset-0 w-full h-full object-cover ${
+                           product.flip_thumbnail ? "-scale-x-100" : ""
+                         }">
+                </div>
+            </figure>
+            <div class="card-body">
+                <h2 class="card-title">${product.name}</h2>
+                <p class="text-sm">${product.description.substring(
+                  0,
+                  100
+                )}...</p>
+                <div class="flex flex-wrap gap-1 mb-2">
+                    <span class="badge badge-outline">${product.category}</span>
+                    <span class="badge badge-secondary">Stock: ${
+                      product.stock
+                    }</span>
+                </div>
+                <div class="text-lg font-semibold">Rp ${parseInt(
+                  product.price
+                ).toLocaleString()}</div>
+                <div class="card-actions justify-end">
+                    {% if user.is_authenticated %}
+                    <button class="btn btn-sm btn-outline" onclick="editProduct('${
+                      product.id
+                    }')">Edit</button>
+                    <button class="btn btn-sm btn-error" onclick="deleteProduct('${
+                      product.id
+                    }')">Delete</button>
+                    {% endif %}
+                </div>
+            </div>
+        `;
+      return card;
+    }
+
+    function openModal(mode, productData = null) {
+      const modal = document.getElementById("productModal");
+      const modalTitle = document.getElementById("modalTitle");
+
+      if (mode === "add") {
+        modalTitle.textContent = "Add Product";
+        clearForm();
+        editingProductId = null;
+      } else if (mode === "edit" && productData) {
+        modalTitle.textContent = "Edit Product";
+        fillForm(productData);
+        editingProductId = productData.id;
+      }
+
+      modal.showModal();
+    }
+
+    function closeModal() {
+      const modal = document.getElementById("productModal");
+      modal.close();
+      clearForm();
+      editingProductId = null;
+    }
+
+    function clearForm() {
+      document.getElementById("productForm").reset();
+    }
+
+    function fillForm(product) {
+      document.getElementById("productName").value = product.name;
+      document.getElementById("productPrice").value = product.price;
+      document.getElementById("productCategory").value = product.category;
+      document.getElementById("productStock").value = product.stock;
+      document.getElementById("productRating").value = product.rating;
+      document.getElementById("productSize").value = product.size || "";
+      document.getElementById("productThumbnail").value = product.thumbnail;
+      document.getElementById("productDescription").value = product.description;
+      document.getElementById("productFeatured").checked = product.is_featured;
+      document.getElementById("productFlipThumbnail").checked =
+        product.flip_thumbnail;
+    }
+
+    function getFormData() {
+      return {
+        name: document.getElementById("productName").value,
+        price: parseInt(document.getElementById("productPrice").value),
+        category: document.getElementById("productCategory").value,
+        stock: parseInt(document.getElementById("productStock").value),
+        rating: parseFloat(document.getElementById("productRating").value) || 0,
+        size: document.getElementById("productSize").value,
+        thumbnail: document.getElementById("productThumbnail").value,
+        description: document.getElementById("productDescription").value,
+        is_featured: document.getElementById("productFeatured").checked,
+        flip_thumbnail: document.getElementById("productFlipThumbnail").checked,
+      };
+    }
+
+    function createProduct() {
+      const formData = getFormData();
+
+      fetch('{% url "main:add_product_ajax" %}', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+        body: JSON.stringify(formData),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            closeModal();
+            loadProducts();
+            showAlert("Product created successfully!", "success");
+          } else {
+            showAlert(data.error || "Error creating product", "error");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          showAlert("Error creating product", "error");
+        });
+    }
+
+    function updateProduct(productId) {
+      const formData = getFormData();
+
+      fetch(`/ajax/edit-product/${productId}/`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+        body: JSON.stringify(formData),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            closeModal();
+            loadProducts();
+            showAlert("Product updated successfully!", "success");
+          } else {
+            showAlert(data.error || "Error updating product", "error");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          showAlert("Error updating product", "error");
+        });
+    }
+
+    window.editProduct = function (productId) {
+      fetch(`/ajax/edit-product/${productId}/`)
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.product) {
+            openModal("edit", data.product);
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          showAlert("Error loading product data", "error");
+        });
+    };
+
+    window.deleteProduct = function (productId) {
+      if (confirm("Are you sure you want to delete this product?")) {
+        fetch(`/ajax/delete-product/${productId}/`, {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              loadProducts();
+              showAlert("Product deleted successfully!", "success");
+            } else {
+              showAlert(data.error || "Error deleting product", "error");
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            showAlert("Error deleting product", "error");
+          });
+      }
+    };
+
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === name + "=") {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+    function showAlert(message, type) {
+      // Create a simple alert div
+      const alert = document.createElement("div");
+      alert.className = `alert alert-${type} fixed top-4 right-4 w-auto z-50`;
+      alert.innerHTML = `
+            <span>${message}</span>
+            <button class="btn btn-sm btn-circle btn-ghost" onclick="this.parentElement.remove()">✕</button>
+        `;
+      document.body.appendChild(alert);
+
+      // Auto remove after 3 seconds
+      setTimeout(() => {
+        if (alert.parentElement) {
+          alert.remove();
+        }
+      }, 3000);
+    }
+  });
+</script>
+{% endblock %}

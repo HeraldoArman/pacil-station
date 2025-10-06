@@ -101,7 +101,7 @@ def add_product_ajax(request):
     if not request.user.is_authenticated:
         return HttpResponse("Unauthorized", status=401)
     try:
-        data = json.loads(request.body)
+        data = json.load(request.body)
         product = Product.objects.create(
             user=request.user,
             name=data.get('name'),
@@ -140,9 +140,9 @@ def add_product_ajax(request):
 
 @csrf_exempt
 def get_products_ajax(request):
-    producst = Product.objects.all()
+    products = Product.objects.all()
     data = []
-    for product in producst:
+    for product in products:
         data.append({
             'id': str(product.id),
             'name': product.name,
@@ -157,7 +157,7 @@ def get_products_ajax(request):
             'stock': product.stock,
             'total_sales': product.total_sales,
             'brand': product.brand.name if product.brand else None,
-            'user': product.user.username,
+            # 'user': product.user.username,
             'created_at': product.created_at.strftime('%Y-%m-%d %H:%M:%S')
         })
     
@@ -166,13 +166,12 @@ def get_products_ajax(request):
 @csrf_exempt
 def edit_product_ajax(request, pk):
     if not request.user.is_authenticated:
-        return HttpResponse("Unauthorized", status=401)
+        return JsonResponse({'error': 'Authentication required'}, status=401)
     try:
         product = get_object_or_404(Product, pk=pk, user=request.user)
         if request.method == "PUT":
-            data = json.load(request.body)
+            data = json.loads(request.body)  # Changed from json.load() to json.loads()
             
-            product.name = data.get('name', product.name)
             product.name = data.get('name', product.name)
             product.price = data.get('price', product.price)
             product.description = data.get('description', product.description)
@@ -227,8 +226,6 @@ def edit_product_ajax(request, pk):
             
     except Exception as e:
         return JsonResponse({'success': False, 'message': 'Failed to edit product', 'detail': str(e)}, status=400)
-        
-
 
 @csrf_exempt
 @require_POST
@@ -338,3 +335,6 @@ def add_car(request):
     }
     return render(request, "main/add_car.html", context)
 
+
+def ajax_products(request):
+    return render(request, 'main/ajax_products.html')

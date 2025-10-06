@@ -19,7 +19,8 @@ from main.views import (
     add_product_ajax,
     edit_product_ajax,
     delete_product_ajax,
-    get_products_ajax                 
+    get_products_ajax,
+    ajax_products  
                         )
 
 app_name = 'main'
@@ -45,4 +46,5 @@ urlpatterns = [
     path('ajax/products/', get_products_ajax, name='get_products_ajax'),
     path('ajax/edit-product/<uuid:pk>/', edit_product_ajax, name='edit_product_ajax'),
     path('ajax/delete-product/<uuid:pk>/', delete_product_ajax, name='delete_product_ajax'),
+    path('ajax-products/', ajax_products, name='ajax_products'),
 ]
