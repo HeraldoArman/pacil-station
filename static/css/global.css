@@ -1,0 +1,32 @@
+.navbar {
+    background-color: red;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.logo {
+
+}
+
+.logo img {
+    height: 40px;
+}
+
+.logo h1 {
+    color: white;
+    margin: 0;
+    font-weight: bold;
+}
+
+.nav-links a {
+    color: white;
+    padding: 0;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.nav-links a:hover {
+    font-size: large;
+    
+}
