@@ -9,7 +9,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.http import HttpResponse, HttpResponseRedirect
 import datetime
+from django.views.decorators.http import require_POST
 from django.urls import reverse
+import json
+import django.views.decorators.csrf as csrf
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+
 
 def show_main(request):
     featured_products = Product.objects.filter(is_featured=True).order_by('total_sales')
@@ -74,6 +80,8 @@ def view_json_by_id(request, pk):
     except Product.DoesNotExist:
         return HttpResponse("Product not found", status=404)
     
+    
+    
 @login_required(login_url='/login/')
 def add_product(request):
     form = ProductForm(request.POST or None)
@@ -87,6 +95,156 @@ def add_product(request):
     }
     return render(request, "main/add_product.html", context)
 
+@csrf_exempt
+@require_POST
+def add_product_ajax(request):
+    if not request.user.is_authenticated:
+        return HttpResponse("Unauthorized", status=401)
+    try:
+        data = json.loads(request.body)
+        product = Product.objects.create(
+            user=request.user,
+            name=data.get('name'),
+            price=data.get('price'),
+            description=data.get('description'),
+            thumbnail=data.get('thumbnail'),
+            flip_thumbnail=data.get('flip_thumbnail', False),
+            category=data.get('category'),
+            is_featured=data.get('is_featured', False),
+            size=data.get('size'),
+            rating=data.get('rating', 0.0),
+            stock=data.get('stock', 0),
+            total_sales=data.get('total_sales', 0),
+            brand_id=data.get('brand_id') if data.get('brand_id') else None
+        )
+        
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Product created successfully',
+            'product': {
+                'id': str(product.id),
+                'name': product.name,
+                'price': product.price,
+                'description': product.description,
+                'thumbnail': product.thumbnail,
+                'category': product.category,
+                'rating': product.rating,
+                'stock': product.stock,
+                'brand': product.brand.name if product.brand else None
+            }
+        })
+    except Exception as e:
+        return JsonResponse({'success': False, 'message': 'Failed to add product', 'detail': str(e)}, status=400)
+        
+
+@csrf_exempt
+def get_products_ajax(request):
+    producst = Product.objects.all()
+    data = []
+    for product in producst:
+        data.append({
+            'id': str(product.id),
+            'name': product.name,
+            'price': product.price,
+            'description': product.description,
+            'thumbnail': product.thumbnail,
+            'flip_thumbnail': product.flip_thumbnail,
+            'category': product.category,
+            'is_featured': product.is_featured,
+            'size': product.size,
+            'rating': product.rating,
+            'stock': product.stock,
+            'total_sales': product.total_sales,
+            'brand': product.brand.name if product.brand else None,
+            'user': product.user.username,
+            'created_at': product.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        })
+    
+    return JsonResponse({'products': data})
+
+@csrf_exempt
+def edit_product_ajax(request, pk):
+    if not request.user.is_authenticated:
+        return HttpResponse("Unauthorized", status=401)
+    try:
+        product = get_object_or_404(Product, pk=pk, user=request.user)
+        if request.method == "PUT":
+            data = json.load(request.body)
+            
+            product.name = data.get('name', product.name)
+            product.name = data.get('name', product.name)
+            product.price = data.get('price', product.price)
+            product.description = data.get('description', product.description)
+            product.thumbnail = data.get('thumbnail', product.thumbnail)
+            product.flip_thumbnail = data.get('flip_thumbnail', product.flip_thumbnail)
+            product.category = data.get('category', product.category)
+            product.is_featured = data.get('is_featured', product.is_featured)
+            product.size = data.get('size', product.size)
+            product.rating = data.get('rating', product.rating)
+            product.stock = data.get('stock', product.stock)
+            product.total_sales = data.get('total_sales', product.total_sales)
+            
+            if data.get('brand_id'):
+                product.brand_id = data.get('brand_id')
+            
+            product.save()
+            return JsonResponse({
+                'success': True,
+                'message': 'Product updated successfully',
+                'product': {
+                    'id': str(product.id),
+                    'name': product.name,
+                    'price': product.price,
+                    'description': product.description,
+                    'thumbnail': product.thumbnail,
+                    'category': product.category,
+                    'rating': product.rating,
+                    'stock': product.stock,
+                    'brand': product.brand.name if product.brand else None
+                }
+            })
+            
+        elif request.method == 'GET':
+            return JsonResponse({
+                'product': {
+                    'id': str(product.id),
+                    'name': product.name,
+                    'price': product.price,
+                    'description': product.description,
+                    'thumbnail': product.thumbnail,
+                    'flip_thumbnail': product.flip_thumbnail,
+                    'category': product.category,
+                    'is_featured': product.is_featured,
+                    'size': product.size,
+                    'rating': product.rating,
+                    'stock': product.stock,
+                    'total_sales': product.total_sales,
+                    'brand_id': product.brand.id if product.brand else None,
+                    'brand': product.brand.name if product.brand else None
+                }
+            })
+            
+    except Exception as e:
+        return JsonResponse({'success': False, 'message': 'Failed to edit product', 'detail': str(e)}, status=400)
+        
+
+
+@csrf_exempt
+@require_POST
+def delete_product_ajax(request, pk):
+    if not request.user.is_authenticated:
+        return HttpResponse("Unauthorized", status=401)
+    try:
+        product = get_object_or_404(Product, pk=pk, user=request.user)
+        product.delete()
+        return JsonResponse({'success': True, 'message': 'Product deleted successfully'})
+    except Exception as e:
+        return JsonResponse({'success': False, 'message': 'Failed to delete product', 'detail': str(e)}, status=400)
+
+            
+            
+            
 @login_required(login_url='/login/')
 def edit_product(request, pk):
     product_data = get_object_or_404(Product, pk=pk, user=request.user)
