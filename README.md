@@ -614,6 +614,25 @@ Secara konsep, render di django berarti setiap kali user melakukan aksi (memence
 5. *Bisa komunikasi asynchronous*: backend jalan di background, user tidak perlu menunggu halaman selesai load untuk tetap melakukan hal lain.
 
 ## 4. Bagaimana cara memastikan keamanan saat menggunakan AJAX untuk fitur Login dan Register di Django?
+1. **Gunakan CSRF Token:**  
+  Django secara default menggunakan CSRF protection. Pastikan setiap AJAX request POST menyertakan CSRF token. Token ini bisa diambil dari template dan dikirim bersama data AJAX.
+  ```javascript
+  fetch('/login/', {
+    method: 'POST',
+    headers: {
+     'X-CSRFToken': csrfToken, // ambil dari cookie atau template
+     'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({username, password})
+  })
+  ```
+2. **Gunakan HTTPS:**  
+  Pastikan website menggunakan HTTPS agar data (termasuk password) yang dikirim lewat AJAX tidak mudah disadap.
+
+3. **Batasi Rate Request:**  
+  Implementasikan rate limiting atau throttling agar tidak mudah terkena brute force attack pada endpoint login/register.
+
+
 
 
 ## 5. Bagaimana AJAX mempengaruhi pengalaman pengguna (User Experience) pada website?
