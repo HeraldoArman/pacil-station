@@ -99,9 +99,9 @@ def add_product(request):
 @require_POST
 def add_product_ajax(request):
     if not request.user.is_authenticated:
-        return HttpResponse("Unauthorized", status=401)
+        return JsonResponse({'error': 'Authentication required'}, status=401)
     try:
-        data = json.load(request.body)
+        data = json.loads(request.body)
         product = Product.objects.create(
             user=request.user,
             name=data.get('name'),
@@ -118,7 +118,6 @@ def add_product_ajax(request):
             brand_id=data.get('brand_id') if data.get('brand_id') else None
         )
         
-        
         return JsonResponse({
             'success': True,
             'message': 'Product created successfully',
@@ -131,16 +130,30 @@ def add_product_ajax(request):
                 'category': product.category,
                 'rating': product.rating,
                 'stock': product.stock,
+                'total_sales': product.total_sales,
                 'brand': product.brand.name if product.brand else None
             }
         })
     except Exception as e:
         return JsonResponse({'success': False, 'message': 'Failed to add product', 'detail': str(e)}, status=400)
-        
+
+
+def get_product_form_ajax(request):
+    from .models import Product
+    from .forms import ProductForm
+    
+    form = ProductForm()
+    brands = Product.Brand.objects.all()
+    
+    return JsonResponse({
+        'brands': [{'id': str(brand.id), 'name': brand.name} for brand in brands]
+    }) 
 
 @csrf_exempt
 def get_products_ajax(request):
-    products = Product.objects.all()
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Authentication required'}, status=401)
+    products = Product.objects.filter(user=request.user)
     data = []
     for product in products:
         data.append({
@@ -338,3 +351,96 @@ def add_car(request):
 
 def ajax_products(request):
     return render(request, 'main/ajax_products.html')
+
+
+
+@csrf_exempt
+def ajax_login(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            username = data.get('username')
+            password = data.get('password')
+            
+            if not username or not password:
+                return JsonResponse({
+                    'success': False,
+                    'message': 'Username and password are required'
+                }, status=400)
+            
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                
+                response_data = {
+                    'success': True,
+                    'message': 'Login successful',
+                    'redirect_url': reverse('main:show_main')
+                }
+                response = JsonResponse(response_data)
+                response.set_cookie('last_login', str(datetime.datetime.now()))
+                return response
+            else:
+                return JsonResponse({
+                    'success': False,
+                    'message': 'Invalid username or password'
+                }, status=400)
+                
+        except json.JSONDecodeError:
+            return JsonResponse({
+                'success': False,
+                'message': 'Invalid JSON data'
+            }, status=400)
+        except Exception as e:
+            return JsonResponse({
+                'success': False,
+                'message': 'An error occurred during login',
+                'detail': str(e)
+            }, status=500)
+    
+    return JsonResponse({'success': False, 'message': 'Method not allowed'}, status=405)
+
+@csrf_exempt
+def ajax_register(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            
+            # Create form with data
+            form = RegisterForm(data)
+            
+            if form.is_valid():
+                user = form.save()
+                return JsonResponse({
+                    'success': True,
+                    'message': 'Registration successful',
+                    'user_id': user.id,
+                    'username': user.username
+                })
+            else:
+                # Return form errors
+                errors = {}
+                for field, error_list in form.errors.items():
+                    errors[field] = [str(error) for error in error_list]
+                
+                return JsonResponse({
+                    'success': False,
+                    'message': 'Registration failed',
+                    'errors': errors
+                }, status=400)
+                
+        except json.JSONDecodeError:
+            return JsonResponse({
+                'success': False,
+                'message': 'Invalid JSON data'
+            }, status=400)
+        except Exception as e:
+            return JsonResponse({
+                'success': False,
+                'message': 'An error occurred during registration'
+            }, status=500)
+    
+    return JsonResponse({'success': False, 'message': 'Method not allowed'}, status=405)
+
+def ajax_auth(request):
+    return render(request, 'main/ajax_auth.html')

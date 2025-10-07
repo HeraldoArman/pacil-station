@@ -76,6 +76,13 @@
           <span>{{ message }}</span>
         </div>
         {% endfor %} {% endif %}
+        <div class="divider text-xs sm:text-sm">or login with AJAX</div>
+        <div class="form-control">
+          <a href="{% url 'main:ajax_auth' %}" class="btn btn-outline w-full text-sm sm:text-base py-2 sm:py-3 flex items-center justify-center gap-2">  
+            Login with AJAX
+          </a>
+        </div>
+
 
         <div class="form-control mt-6">
           <button type="submit" class="btn btn-primary w-full text-sm sm:text-base py-2 sm:py-3">

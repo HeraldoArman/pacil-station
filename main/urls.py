@@ -20,7 +20,12 @@ from main.views import (
     edit_product_ajax,
     delete_product_ajax,
     get_products_ajax,
-    ajax_products  
+    ajax_products,
+    get_product_form_ajax,
+    ajax_auth,
+    ajax_login,
+    ajax_register,
+    
                         )
 
 app_name = 'main'
@@ -47,4 +52,8 @@ urlpatterns = [
     path('ajax/edit-product/<uuid:pk>/', edit_product_ajax, name='edit_product_ajax'),
     path('ajax/delete-product/<uuid:pk>/', delete_product_ajax, name='delete_product_ajax'),
     path('ajax-products/', ajax_products, name='ajax_products'),
+    path('ajax/get-form/', get_product_form_ajax, name='get_product_form_ajax'),
+    path('ajax-auth/', ajax_auth, name='ajax_auth'),
+    path('ajax/login/', ajax_login, name='ajax_login'),
+    path('ajax/register/', ajax_register, name='ajax_register'),
 ]
