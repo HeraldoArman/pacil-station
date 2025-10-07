@@ -1,0 +1,326 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-center">
+    <div class="w-full max-w-md">
+      <!-- Tab Navigation -->
+      <div class="tabs tabs-boxed mb-6">
+        <a id="loginTab" class="tab tab-active">Login</a>
+        <a id="registerTab" class="tab">Register</a>
+      </div>
+
+      <!-- Login Form -->
+      <div id="loginForm" class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+          <h2 class="card-title justify-center mb-4">Welcome Back</h2>
+          
+          <form id="loginFormData" class="space-y-4">
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text">Username</span>
+              </label>
+              <input 
+                type="text" 
+                id="loginUsername" 
+                name="username" 
+                class="input input-bordered w-full" 
+                required
+              />
+            </div>
+
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text">Password</span>
+              </label>
+              <input 
+                type="password" 
+                id="loginPassword" 
+                name="password" 
+                class="input input-bordered w-full" 
+                required
+              />
+            </div>
+
+            <div class="form-control mt-6">
+              <button type="submit" id="loginBtn" class="btn btn-primary w-full">
+                <span class="loading loading-spinner loading-sm hidden" id="loginSpinner"></span>
+                <span id="loginText">Login</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Register Form -->
+      <div id="registerForm" class="card bg-base-100 shadow-xl hidden">
+        <div class="card-body">
+          <h2 class="card-title justify-center mb-4">Create Account</h2>
+          
+          <form id="registerFormData" class="space-y-4">
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text">Username</span>
+              </label>
+              <input 
+                type="text" 
+                id="registerUsername" 
+                name="username" 
+                class="input input-bordered w-full" 
+                required
+              />
+            </div>
+
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text">Email</span>
+              </label>
+              <input 
+                type="email" 
+                id="registerEmail" 
+                name="email" 
+                class="input input-bordered w-full" 
+                required
+              />
+            </div>
+
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text">Password</span>
+              </label>
+              <input 
+                type="password" 
+                id="registerPassword1" 
+                name="password1" 
+                class="input input-bordered w-full" 
+                required
+              />
+            </div>
+
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text">Confirm Password</span>
+              </label>
+              <input 
+                type="password" 
+                id="registerPassword2" 
+                name="password2" 
+                class="input input-bordered w-full" 
+                required
+              />
+            </div>
+
+            <div class="form-control mt-6">
+              <button type="submit" id="registerBtn" class="btn btn-primary w-full">
+                <span class="loading loading-spinner loading-sm hidden" id="registerSpinner"></span>
+                <span id="registerText">Register</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const loginTab = document.getElementById('loginTab');
+    const registerTab = document.getElementById('registerTab');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const loginFormData = document.getElementById('loginFormData');
+    const registerFormData = document.getElementById('registerFormData');
+
+    // Tab switching
+    loginTab.addEventListener('click', function() {
+        loginTab.classList.add('tab-active');
+        registerTab.classList.remove('tab-active');
+        loginForm.classList.remove('hidden');
+        registerForm.classList.add('hidden');
+    });
+
+    registerTab.addEventListener('click', function() {
+        registerTab.classList.add('tab-active');
+        loginTab.classList.remove('tab-active');
+        registerForm.classList.remove('hidden');
+        loginForm.classList.add('hidden');
+    });
+
+    // Login form submission
+    loginFormData.addEventListener('submit', function(e) {
+        e.preventDefault();
+        handleLogin();
+    });
+
+    // Register form submission
+    registerFormData.addEventListener('submit', function(e) {
+        e.preventDefault();
+        handleRegister();
+    });
+
+    function handleLogin() {
+        const loginBtn = document.getElementById('loginBtn');
+        const loginSpinner = document.getElementById('loginSpinner');
+        const loginText = document.getElementById('loginText');
+        
+        const formData = {
+            username: document.getElementById('loginUsername').value,
+            password: document.getElementById('loginPassword').value
+        };
+
+        // Show loading state
+        loginBtn.disabled = true;
+        loginSpinner.classList.remove('hidden');
+        loginText.textContent = 'Logging in...';
+
+        fetch('{% url "main:ajax_login" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showAlert('Login successful! Redirecting...', 'success');
+                setTimeout(() => {
+                    window.location.href = data.redirect_url || '{% url "main:show_main" %}';
+                }, 1000);
+            } else {
+                showAlert(data.message || 'Login failed', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showAlert('An error occurred during login', 'error');
+        })
+        .finally(() => {
+            loginBtn.disabled = false;
+            loginSpinner.classList.add('hidden');
+            loginText.textContent = 'Login';
+        });
+    }
+
+    function handleRegister() {
+        const registerBtn = document.getElementById('registerBtn');
+        const registerSpinner = document.getElementById('registerSpinner');
+        const registerText = document.getElementById('registerText');
+        
+        const formData = {
+            username: document.getElementById('registerUsername').value,
+            email: document.getElementById('registerEmail').value,
+            password1: document.getElementById('registerPassword1').value,
+            password2: document.getElementById('registerPassword2').value
+        };
+
+        // Client-side validation
+        if (formData.password1 !== formData.password2) {
+            showAlert('Passwords do not match', 'error');
+            return;
+        }
+
+        // Show loading state
+        registerBtn.disabled = true;
+        registerSpinner.classList.remove('hidden');
+        registerText.textContent = 'Creating account...';
+
+        fetch('{% url "main:ajax_register" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showAlert('Registration successful! You can now login.', 'success');
+                // Clear form and switch to login tab
+                registerFormData.reset();
+                loginTab.click();
+            } else {
+                if (data.errors) {
+                    // Display field-specific errors
+                    Object.keys(data.errors).forEach(field => {
+                        data.errors[field].forEach(error => {
+                            showAlert(`${field}: ${error}`, 'error');
+                        });
+                    });
+                } else {
+                    showAlert(data.message || 'Registration failed', 'error');
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showAlert('An error occurred during registration', 'error');
+        })
+        .finally(() => {
+            registerBtn.disabled = false;
+            registerSpinner.classList.add('hidden');
+            registerText.textContent = 'Register';
+        });
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function showAlert(message, type) {
+        const alert = document.createElement('div');
+        let iconSVG = `
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-6 w-6 shrink-0 stroke-current">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        `;
+
+        if (type === 'success') {
+            iconSVG = `
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            `;
+        } else if (type === 'error') {
+            iconSVG = `
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            `;
+        }
+
+        let alertClass = 'alert-info';
+        if (type === 'success') alertClass = 'alert-success';
+        else if (type === 'error') alertClass = 'alert-error';
+
+        alert.className = `alert ${alertClass} fixed top-4 right-4 w-auto z-50 flex items-center gap-2 max-w-sm`;
+        alert.setAttribute('role', 'alert');
+        alert.innerHTML = `
+        ${iconSVG}
+        <span>${message}</span>
+        <button class="btn btn-sm btn-circle btn-ghost ml-2" onclick="this.parentElement.remove()">✕</button>
+        `;
+        document.body.appendChild(alert);
+
+        setTimeout(() => {
+            if (alert.parentElement) {
+                alert.remove();
+            }
+        }, 5000);
+    }
+});
+</script>
+{% endblock %}

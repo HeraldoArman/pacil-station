@@ -1,5 +1,32 @@
 from django.urls import path
-from main.views import show_main, product_detail, add_employee, view_xml, view_json, view_xml_by_id, view_json_by_id, add_product, add_brand, login_views, register_views, logout_user, profile_views, delete_product, add_car, edit_product
+from main.views import (
+    show_main,
+    product_detail,
+    add_employee,
+    view_xml,
+    view_json,
+    view_xml_by_id,
+    view_json_by_id,
+    add_product,
+    add_brand,
+    login_views,
+    register_views,
+    logout_user,
+    profile_views,
+    delete_product, 
+    add_car, 
+    edit_product,
+    add_product_ajax,
+    edit_product_ajax,
+    delete_product_ajax,
+    get_products_ajax,
+    ajax_products,
+    get_product_form_ajax,
+    ajax_auth,
+    ajax_login,
+    ajax_register,
+    
+                        )
 
 app_name = 'main'
 
@@ -19,5 +46,14 @@ urlpatterns = [
     path('profile/', profile_views, name='profile'),
     path('delete_product/<uuid:pk>/', delete_product, name='delete_product'),
     path('edit_product/<uuid:pk>/', edit_product, name='edit_product'),
-    path('add_car/', add_car, name='add_car')
+    path('add_car/', add_car, name='add_car'),
+    path('ajax/add-product/', add_product_ajax, name='add_product_ajax'),
+    path('ajax/products/', get_products_ajax, name='get_products_ajax'),
+    path('ajax/edit-product/<uuid:pk>/', edit_product_ajax, name='edit_product_ajax'),
+    path('ajax/delete-product/<uuid:pk>/', delete_product_ajax, name='delete_product_ajax'),
+    path('ajax-products/', ajax_products, name='ajax_products'),
+    path('ajax/get-form/', get_product_form_ajax, name='get_product_form_ajax'),
+    path('ajax-auth/', ajax_auth, name='ajax_auth'),
+    path('ajax/login/', ajax_login, name='ajax_login'),
+    path('ajax/register/', ajax_register, name='ajax_register'),
 ]

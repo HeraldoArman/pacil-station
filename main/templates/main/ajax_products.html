@@ -1,0 +1,815 @@
+{% extends "base.html" %} {% block content %}
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold mb-4">Product Management with AJAX</h1>
+    <div class="flex flex-wrap gap-2 mb-4">
+      <button id="addProductBtn" class="btn btn-primary">
+        + Add New Product
+      </button>
+      <button id="refreshBtn" class="btn btn-secondary">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5 mr-2"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+          />
+        </svg>
+        <span
+          class="loading loading-spinner loading-sm hidden"
+          id="refreshSpinner"
+        ></span>
+        <span id="refreshText">Refresh</span>
+      </button>
+    </div>
+
+    <div
+      id="productList"
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+    ></div>
+    <div id="emptyState" class="hidden text-center py-12">
+
+      <div class="flex flex-col items-center justify-center py-8 sm:py-12 lg:py-16">
+        <div class="text-center max-w-md mx-auto">
+          <div class="mb-4 sm:mb-6">
+            <svg
+              class="w-16 h-16 sm:w-20 sm:h-20 mx-auto text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1"
+                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+              />
+            </svg>
+          </div>
+          
+          <h3 class="text-lg sm:text-xl font-semibold text-gray-900 mb-2">No products yet</h3>
+          <p class="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8">
+            Start by creating your first product to showcase here.
+          </p>
+          
+          <button class="btn btn-primary" onclick="document.getElementById('addProductBtn').click()">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round" 
+              class="mr-2"
+            >
+              <path d="M5 12h14" />
+              <path d="M12 5v14" />
+            </svg>
+            Create Your First Product
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<dialog id="productModal" class="modal">
+  <div class="modal-box w-11/12 max-w-4xl">
+    <h3 id="modalTitle" class="font-bold text-lg mb-4">Add Product</h3>
+
+    <form id="productForm" class="space-y-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Name *</span>
+          </label>
+          <input
+            type="text"
+            id="id_name"
+            name="name"
+            class="input input-bordered w-full"
+            required
+          />
+        </div>
+
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Price *</span>
+          </label>
+          <input
+            type="number"
+            id="id_price"
+            name="price"
+            class="input input-bordered w-full"
+            required
+          />
+        </div>
+
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Category *</span>
+          </label>
+          <input
+            type="text"
+            id="id_category"
+            name="category"
+            class="input input-bordered w-full"
+            required
+          />
+        </div>
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Stock *</span>
+          </label>
+          <input
+            type="number"
+            id="id_stock"
+            name="stock"
+            class="input input-bordered w-full"
+            required
+          />
+        </div>
+
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Rating</span>
+          </label>
+          <input
+            type="number"
+            step="0.1"
+            min="0"
+            max="5"
+            id="id_rating"
+            name="rating"
+            class="input input-bordered w-full"
+          />
+        </div>
+
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Size</span>
+          </label>
+          <input
+            type="text"
+            id="id_size"
+            name="size"
+            class="input input-bordered w-full"
+          />
+        </div>
+
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Total Sales</span>
+          </label>
+          <input
+            type="number"
+            id="id_total_sales"
+            name="total_sales"
+            class="input input-bordered w-full"
+            value="0"
+          />
+        </div>
+
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Brand</span>
+          </label>
+          <select
+            id="id_brand"
+            name="brand"
+            class="select select-bordered w-full"
+          >
+            <option value="">Select a brand</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text">Thumbnail URL *</span>
+        </label>
+        <input
+          type="url"
+          id="id_thumbnail"
+          name="thumbnail"
+          class="input input-bordered w-full"
+          required
+        />
+      </div>
+
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text">Description *</span>
+        </label>
+        <textarea
+          id="id_description"
+          name="description"
+          class="textarea textarea-bordered h-24 w-full"
+          placeholder="Product description"
+          required
+        ></textarea>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div class="form-control">
+          <label class="cursor-pointer label justify-start gap-2">
+            <input
+              type="checkbox"
+              id="id_is_featured"
+              name="is_featured"
+              class="checkbox"
+            />
+            <span class="label-text">Featured Product</span>
+          </label>
+        </div>
+
+        <div class="form-control">
+          <label class="cursor-pointer label justify-start gap-2">
+            <input
+              type="checkbox"
+              id="id_flip_thumbnail"
+              name="flip_thumbnail"
+              class="checkbox"
+            />
+            <span class="label-text">Flip Thumbnail</span>
+          </label>
+        </div>
+      </div>
+    </form>
+
+    <div class="modal-action">
+      <button id="saveProductBtn" class="btn btn-primary">
+        <span
+          class="loading loading-spinner loading-sm hidden"
+          id="saveSpinner"
+        ></span>
+        Save
+      </button>
+      <button id="cancelBtn" class="btn btn-ghost">Cancel</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="deleteModal" class="modal">
+  <div class="modal-box">
+    <h3 class="text-lg font-bold">Confirm Delete</h3>
+    <p class="py-4" id="deleteMessage">
+      Are you sure you want to delete this product?
+    </p>
+    <div class="modal-action">
+      <button id="confirmDeleteBtn" class="btn btn-error">
+        <span
+          class="loading loading-spinner loading-sm hidden"
+          id="deleteSpinner"
+        ></span>
+        Delete
+      </button>
+      <button id="cancelDeleteBtn" class="btn btn-ghost">Cancel</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    let editingProductId = null;
+    let brands = [];
+    let isLoading = false;
+
+    loadBrands();
+    loadProducts();
+
+    document.getElementById("addProductBtn").addEventListener("click", function () {
+      openModal("add");
+    });
+
+    document.getElementById("refreshBtn").addEventListener("click", function () {
+      refreshProducts();
+    });
+
+    document.getElementById("cancelBtn").addEventListener("click", function () {
+      closeModal();
+    });
+
+    document.getElementById("saveProductBtn").addEventListener("click", function () {
+      if (editingProductId) {
+        updateProduct(editingProductId);
+      } else {
+        createProduct();
+      }
+    });
+
+    function refreshProducts(silent = false) {
+      if (isLoading) return;
+      
+      const refreshBtn = document.getElementById("refreshBtn");
+      const refreshSpinner = document.getElementById("refreshSpinner");
+      const refreshText = document.getElementById("refreshText");
+      
+      if (!silent) {
+        refreshBtn.disabled = true;
+        refreshSpinner.classList.remove("hidden");
+        refreshText.textContent = "Refreshing...";
+      }
+      
+      loadProducts().finally(() => {
+        if (!silent) {
+          refreshBtn.disabled = false;
+          refreshSpinner.classList.add("hidden");
+          refreshText.textContent = "Refresh";
+        }
+      });
+    }
+
+    function loadBrands() {
+      fetch('{% url "main:get_product_form_ajax" %}')
+        .then((response) => response.json())
+        .then((data) => {
+          brands = data.brands;
+          populateBrandSelect();
+        })
+        .catch((error) => {
+          console.error("Error loading brands:", error);
+        });
+    }
+
+    function populateBrandSelect() {
+      const brandSelect = document.getElementById("id_brand");
+      brandSelect.innerHTML = '<option value="">Select a brand</option>';
+
+      brands.forEach((brand) => {
+        const option = document.createElement("option");
+        option.value = brand.id;
+        option.textContent = brand.name;
+        brandSelect.appendChild(option);
+      });
+    }
+
+    function loadProducts() {
+      isLoading = true;
+      
+      return fetch('{% url "main:get_products_ajax" %}')
+        .then((response) => response.json())
+        .then((data) => {
+          displayProducts(data.products);
+
+        })
+        .catch((error) => {
+          console.error("Error loading products:", error);
+          showAlert("Error loading products", "error");
+        })
+        .finally(() => {
+          isLoading = false;
+          hideLoadingSkeleton();
+        });
+    }
+
+    function hideLoadingSkeleton() {
+      const skeleton = document.getElementById("loadingSkeleton");
+      if (skeleton) {
+        skeleton.style.display = "none";
+      }
+    }
+
+    function showLoadingSkeleton() {
+      const skeleton = document.getElementById("loadingSkeleton");
+      if (skeleton) {
+        skeleton.style.display = "contents";
+      }
+    }
+
+    function displayProducts(products) {
+      const productList = document.getElementById("productList");
+      productList.innerHTML = "";
+
+      products.forEach((product) => {
+        const productCard = createProductCard(product);
+        productList.appendChild(productCard);
+      });
+    }
+
+    function displayProducts(products) {
+      const productList = document.getElementById("productList");
+      const emptyState = document.getElementById("emptyState");
+      
+      // Clear existing products but keep skeleton
+      const existingProducts = productList.querySelectorAll('.card:not(#loadingSkeleton *)');
+      existingProducts.forEach(card => card.remove());
+
+      if (products.length === 0) {
+        emptyState.classList.remove("hidden");
+        return;
+      } else {
+        emptyState.classList.add("hidden");
+      }
+
+      products.forEach((product) => {
+        const productCard = createProductCard(product);
+        productList.appendChild(productCard);
+      });
+    }
+
+    function createProductCard(product) {
+      const card = document.createElement("div");
+      card.className = "card bg-base-100 shadow-xl";
+      card.innerHTML = `
+        <figure class="w-full overflow-hidden">
+            <div class="relative w-full aspect-[4/3]">
+                <img src="${product.thumbnail}" alt="${product.name}" 
+                     class="absolute inset-0 w-full h-full object-cover ${
+                       product.flip_thumbnail ? "-scale-x-100" : ""
+                     }" 
+                     onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+            </div>
+        </figure>
+        <div class="card-body">
+            <h2 class="card-title">${product.name}
+                ${
+                  product.is_featured
+                    ? '<div class="badge badge-secondary">Featured</div>'
+                    : ""
+                }
+            </h2>
+            <p class="text-sm">${product.description.substring(0, 100)}...</p>
+            <div class="flex flex-wrap gap-1 mb-2">
+                <span class="badge badge-outline">${product.category}</span>
+                <span class="badge badge-secondary">Stock: ${
+                  product.stock
+                }</span>
+
+                ${
+                  product.total_sales > 0
+                    ? `<span class="badge badge-info">Sales: ${product.total_sales}</span>`
+                    : ""
+                }
+            </div>
+            <div class="text-lg font-semibold">Rp ${parseInt(
+              product.price
+            ).toLocaleString()}</div>
+            ${
+              product.brand
+                ? `<p class="text-sm text-gray-600">Brand: ${product.brand}</p>`
+                : ""
+            }
+            ${
+              product.size
+                ? `<p class="text-sm text-gray-600">Size: ${product.size}</p>`
+                : ""
+            }
+            <div class="card-actions justify-end">
+                {% if user.is_authenticated %}
+                <button class="btn btn-sm btn-outline" onclick="editProduct('${
+                  product.id
+                }')">Edit</button>
+                <button class="btn btn-sm btn-error" onclick="deleteProduct('${
+                  product.id
+                }', '${product.name.replace(/'/g, "\\'")}')">Delete</button>
+                {% endif %}
+            </div>
+        </div>
+    `;
+      return card;
+    }
+
+    function openModal(mode, productData = null) {
+      const modal = document.getElementById("productModal");
+      const modalTitle = document.getElementById("modalTitle");
+
+      if (mode === "add") {
+        modalTitle.textContent = "Add Product";
+        clearForm();
+        editingProductId = null;
+      } else if (mode === "edit" && productData) {
+        modalTitle.textContent = "Edit Product";
+        fillForm(productData);
+        editingProductId = productData.id;
+      }
+
+      modal.showModal();
+    }
+
+    function closeModal() {
+      const modal = document.getElementById("productModal");
+      modal.close();
+      clearForm();
+      editingProductId = null;
+    }
+
+    function clearForm() {
+      document.getElementById("productForm").reset();
+    }
+
+    function fillForm(product) {
+      document.getElementById("id_name").value = product.name || "";
+      document.getElementById("id_price").value = product.price || "";
+      document.getElementById("id_category").value = product.category || "";
+      document.getElementById("id_stock").value = product.stock || "";
+      document.getElementById("id_rating").value = product.rating || "";
+      document.getElementById("id_size").value = product.size || "";
+      document.getElementById("id_total_sales").value =
+        product.total_sales || 0;
+      document.getElementById("id_thumbnail").value = product.thumbnail || "";
+      document.getElementById("id_description").value =
+        product.description || "";
+      document.getElementById("id_is_featured").checked =
+        product.is_featured || false;
+      document.getElementById("id_flip_thumbnail").checked =
+        product.flip_thumbnail || false;
+
+      // Set brand if available
+      const brandSelect = document.getElementById("id_brand");
+      if (product.brand_id) {
+        brandSelect.value = product.brand_id;
+      } else {
+        brandSelect.value = "";
+      }
+    }
+
+    function getFormData() {
+      return {
+        name: document.getElementById("id_name").value,
+        price: parseInt(document.getElementById("id_price").value) || 0,
+        category: document.getElementById("id_category").value,
+        stock: parseInt(document.getElementById("id_stock").value) || 0,
+        rating: parseFloat(document.getElementById("id_rating").value) || 0,
+        size: document.getElementById("id_size").value,
+        total_sales:
+          parseInt(document.getElementById("id_total_sales").value) || 0,
+        thumbnail: document.getElementById("id_thumbnail").value,
+        description: document.getElementById("id_description").value,
+        is_featured: document.getElementById("id_is_featured").checked,
+        flip_thumbnail: document.getElementById("id_flip_thumbnail").checked,
+        brand_id: document.getElementById("id_brand").value || null,
+      };
+    }
+
+    function validateForm() {
+      const requiredFields = [
+        "id_name",
+        "id_price",
+        "id_category",
+        "id_stock",
+        "id_thumbnail",
+        "id_description",
+      ];
+
+      for (let fieldId of requiredFields) {
+        const field = document.getElementById(fieldId);
+        if (!field.value.trim()) {
+          showAlert(`Please fill in the ${field.name} field`, "error");
+          field.focus();
+          return false;
+        }
+      }
+
+      const price = parseInt(document.getElementById("id_price").value);
+      if (price <= 0) {
+        showAlert("Price must be greater than 0", "error");
+        return false;
+      }
+
+      const stock = parseInt(document.getElementById("id_stock").value);
+      if (stock < 0) {
+        showAlert("Stock cannot be negative", "error");
+        return false;
+      }
+
+      const rating =
+        parseFloat(document.getElementById("id_rating").value) || 0;
+      if (rating < 0 || rating > 5) {
+        showAlert("Rating must be between 0 and 5", "error");
+        return false;
+      }
+
+      return true;
+    }
+
+    function createProduct() {
+      if (!validateForm()) return;
+
+      const formData = getFormData();
+      const saveBtn = document.getElementById("saveProductBtn");
+      const spinner = document.getElementById("saveSpinner");
+
+      saveBtn.disabled = true;
+      spinner.classList.remove("hidden");
+
+      fetch('{% url "main:add_product_ajax" %}', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+        body: JSON.stringify(formData),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            closeModal();
+            loadProducts();
+            showAlert("Product created successfully!", "success");
+          } else {
+            showAlert(
+              data.message || data.detail || "Error creating product",
+              "error"
+            );
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          showAlert("Error creating product", "error");
+        })
+        .finally(() => {
+          saveBtn.disabled = false;
+          spinner.classList.add("hidden");
+        });
+    }
+
+    function updateProduct(productId) {
+      if (!validateForm()) return;
+
+      const formData = getFormData();
+      const saveBtn = document.getElementById("saveProductBtn");
+      const spinner = document.getElementById("saveSpinner");
+
+      saveBtn.disabled = true;
+      spinner.classList.remove("hidden");
+
+      fetch(`/ajax/edit-product/${productId}/`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+        body: JSON.stringify(formData),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            closeModal();
+            loadProducts();
+            showAlert("Product updated successfully!", "success");
+          } else {
+            showAlert(
+              data.message || data.detail || "Error updating product",
+              "error"
+            );
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          showAlert("Error updating product", "error");
+        })
+        .finally(() => {
+          saveBtn.disabled = false;
+          spinner.classList.add("hidden");
+        });
+    }
+
+    window.editProduct = function (productId) {
+      fetch(`/ajax/edit-product/${productId}/`)
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.product) {
+            openModal("edit", data.product);
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          showAlert("Error loading product data", "error");
+        });
+    };
+
+    let productToDelete = null;
+    document
+      .getElementById("cancelDeleteBtn")
+      .addEventListener("click", function () {
+        closeDeleteModal();
+      });
+
+    document
+      .getElementById("confirmDeleteBtn")
+      .addEventListener("click", function () {
+        if (productToDelete) {
+          confirmDeleteProduct(productToDelete.id);
+        }
+      });
+    function openDeleteModal(productId, productName) {
+      const modal = document.getElementById("deleteModal");
+      const deleteMessage = document.getElementById("deleteMessage");
+
+      productToDelete = { id: productId, name: productName };
+      deleteMessage.textContent = `Are you sure you want to delete "${productName}"? This action cannot be undone.`;
+
+      modal.showModal();
+    }
+    function closeDeleteModal() {
+      const modal = document.getElementById("deleteModal");
+      modal.close();
+      productToDelete = null;
+    }
+    function confirmDeleteProduct(productId) {
+      const confirmBtn = document.getElementById("confirmDeleteBtn");
+      const deleteSpinner = document.getElementById("deleteSpinner");
+
+      // Show loading state
+      confirmBtn.disabled = true;
+      deleteSpinner.classList.remove("hidden");
+
+      fetch(`/ajax/delete-product/${productId}/`, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            closeDeleteModal();
+            loadProducts();
+            showAlert("Product deleted successfully!", "success");
+          } else {
+            showAlert(data.message || "Error deleting product", "error");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          showAlert("Error deleting product", "error");
+        })
+        .finally(() => {
+          confirmBtn.disabled = false;
+          deleteSpinner.classList.add("hidden");
+        });
+    }
+
+    window.deleteProduct = function (productId, productName = "this product") {
+      openDeleteModal(productId, productName);
+    };
+
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === name + "=") {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+    function showAlert(message, type) {
+      const alert = document.createElement("div");
+      let iconSVG = `
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-6 w-6 shrink-0 stroke-current">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      `;
+
+      if (type === "success") {
+        iconSVG = `
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        `;
+      } else if (type === "error") {
+        iconSVG = `
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        `;
+      }
+
+      let alertClass = "alert-info";
+      if (type === "success") alertClass = "alert-success";
+      else if (type === "error") alertClass = "alert-error";
+
+      alert.className = `alert ${alertClass} fixed top-4 right-4 w-auto z-50 flex items-center gap-2 max-w-sm`;
+      alert.setAttribute("role", "alert");
+      alert.innerHTML = `
+      ${iconSVG}
+      <span>${message}</span>
+      <button class="btn btn-sm btn-circle btn-ghost ml-2" onclick="this.parentElement.remove()">✕</button>
+      `;
+      document.body.appendChild(alert);
+
+      setTimeout(() => {
+        if (alert.parentElement) {
+          alert.remove();
+        }
+      }, 5000);
+    }
+  });
+</script>
+{% endblock %}
