@@ -28,6 +28,7 @@ from main.views import (
     proxy_image,
     create_product_flutter,
     get_brand_by_UUID,
+    get_all_brands,
                         )
 
 app_name = 'main'
@@ -62,4 +63,5 @@ urlpatterns = [
     path('proxy-image/', proxy_image, name='proxy_image'),
     path('create-flutter/', create_product_flutter, name='create_flutter'),
     path('brand/<uuid:pk>/', get_brand_by_UUID, name='get_brand_by_UUID'),
+    path('brands/', get_all_brands, name='get_all_brands'),
 ]
