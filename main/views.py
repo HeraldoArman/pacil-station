@@ -36,11 +36,9 @@ def proxy_image(request):
         return HttpResponse('No URL provided', status=400)
     
     try:
-        # Fetch image from external source
         response = requests.get(image_url, timeout=10)
         response.raise_for_status()
-        
-        # Return the image with proper content type
+
         return HttpResponse(
             response.content,
             content_type=response.headers.get('Content-Type', 'image/jpeg')
@@ -133,6 +131,21 @@ def view_xml(request):
 def view_json(request):
     products = Product.objects.all()
     json_data = serializers.serialize("json", products)
+    
+    if request.user.is_authenticated:
+        # Parse the serialized data to add is_mine field
+        data = json.loads(json_data)
+        for item in data:
+            product_user_id = item['fields'].get('user')
+            item['fields']['is_mine'] = product_user_id == request.user.id
+        json_data = json.dumps(data)
+    else:
+        # If user is not authenticated, set is_mine to False for all products
+        data = json.loads(json_data)
+        for item in data:
+            item['fields']['is_mine'] = False
+        json_data = json.dumps(data)
+    
     return HttpResponse(json_data, content_type="application/json")
 
 
