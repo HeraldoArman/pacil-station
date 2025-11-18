@@ -62,6 +62,6 @@ urlpatterns = [
     
     path('proxy-image/', proxy_image, name='proxy_image'),
     path('create-flutter/', create_product_flutter, name='create_flutter'),
-    path('brand/<uuid:pk>/', get_brand_by_UUID, name='get_brand_by_UUID'),
+    path('brand/<uuid:brand_uuid>/', get_brand_by_UUID, name='get_brand_by_UUID'),
     path('brands/', get_all_brands, name='get_all_brands'),
 ]
