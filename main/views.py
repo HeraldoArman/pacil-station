@@ -15,6 +15,16 @@ import json
 import requests
 
 
+def get_brand_by_UUID(request, brand_uuid):
+    try:
+        brand = Product.Brand.objects.get(id=brand_uuid)
+        return JsonResponse({
+            'id': str(brand.id),
+            'name': brand.name
+        })
+    except Product.Brand.DoesNotExist:
+        return JsonResponse({'error': 'Brand not found'}, status=404)
+
 def proxy_image(request):
     image_url = request.GET.get('url')
     if not image_url:
