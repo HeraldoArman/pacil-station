@@ -1,20 +1,66 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Product, Employee
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.core import serializers
-
-from .forms import ProductForm, BrandForm, LoginForm, RegisterForm, CarForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.http import HttpResponse, HttpResponseRedirect
-import datetime
 from django.views.decorators.http import require_POST
-from django.urls import reverse
-import json
-import django.views.decorators.csrf as csrf
 from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
+from django.urls import reverse
+from django.utils.html import strip_tags
+from .models import Product, Employee
+from .forms import ProductForm, BrandForm, LoginForm, RegisterForm, CarForm
+import datetime
+import json
+import requests
+
+
+def proxy_image(request):
+    image_url = request.GET.get('url')
+    if not image_url:
+        return HttpResponse('No URL provided', status=400)
+    
+    try:
+        # Fetch image from external source
+        response = requests.get(image_url, timeout=10)
+        response.raise_for_status()
+        
+        # Return the image with proper content type
+        return HttpResponse(
+            response.content,
+            content_type=response.headers.get('Content-Type', 'image/jpeg')
+        )
+    except requests.RequestException as e:
+        return HttpResponse(f'Error fetching image: {str(e)}', status=500)
+
+
+@csrf_exempt
+def create_product_flutter(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        
+        product = Product(
+            user=request.user,
+            name=strip_tags(data.get('name')),
+            price=data.get('price'),
+            description=strip_tags(data.get('description')),
+            thumbnail=strip_tags(data.get('thumbnail')),
+            flip_thumbnail=data.get('flip_thumbnail', False),
+            category=strip_tags(data.get('category')),
+            is_featured=data.get('is_featured', False),
+            size=strip_tags(data.get('size')),
+            rating=data.get('rating', 0.0),
+            stock=data.get('stock', 0),
+            total_sales=data.get('total_sales', 0),
+            brand_id=data.get('brand_id') if data.get('brand_id') else None
+        )
+        product.save()
+        
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
+
+
 
 
 def show_main(request):

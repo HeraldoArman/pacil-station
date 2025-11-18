@@ -27,6 +27,12 @@
         ></span>
         <span id="refreshText">Refresh</span>
       </button>
+      <button id="sortByPriceButton" class="btn btn-primary">
+        sort by price
+      </button>
+      <button id="sortByPriceButtonDescending" class="btn btn-primary">
+        sort by price descending
+      </button>
     </div>
 
     <div
@@ -298,6 +304,15 @@
     document.getElementById("cancelBtn").addEventListener("click", function () {
       closeModal();
     });
+    
+    document.getElementById("sortByPriceButton").addEventListener("click", function () {
+      loadSortedProducts();
+    });
+
+    document.getElementById("sortByPriceButtonDescending").addEventListener("click", function () {
+      //loadSortedProducts();
+      loadSortedDescendingProducts()
+    });
 
     document.getElementById("saveProductBtn").addEventListener("click", function () {
       if (editingProductId) {
@@ -370,6 +385,92 @@
           isLoading = false;
           hideLoadingSkeleton();
         });
+    }
+
+
+
+     function loadSortedDescendingProducts() {
+      isLoading = true;
+      
+      return fetch('{% url "main:get_products_ajax" %}')
+        .then((response) => response.json())
+        .then((data) => {
+          displayDescending(data.products);
+
+        })
+        .catch((error) => {
+          console.error("Error loading products:", error);
+          showAlert("Error loading products", "error");
+        })
+        .finally(() => {
+          isLoading = false;
+          hideLoadingSkeleton();
+        });
+    }
+
+
+    function loadSortedProducts() {
+      isLoading = true;
+      
+      return fetch('{% url "main:get_products_ajax" %}')
+        .then((response) => response.json())
+        .then((data) => {
+          displaySorttedProduct(data.products);
+
+        })
+        .catch((error) => {
+          console.error("Error loading products:", error);
+          showAlert("Error loading products", "error");
+        })
+        .finally(() => {
+          isLoading = false;
+          hideLoadingSkeleton();
+        });
+    }
+
+
+    function displaySorttedProduct(products) {
+      const productList = document.getElementById("productList");
+      const emptyState = document.getElementById("emptyState");
+      
+      // Clear existing products but keep skeleton
+      const existingProducts = productList.querySelectorAll('.card:not(#loadingSkeleton *)');
+      existingProducts.forEach(card => card.remove());
+
+      if (products.length === 0) {
+        emptyState.classList.remove("hidden");
+        return;
+      } else {
+        emptyState.classList.add("hidden");
+      }
+      products.sort((a, b) => a.price - b.price);
+
+      products.forEach((product) => {
+        const productCard = createProductCard(product);
+        productList.appendChild(productCard);
+      });
+    }
+
+    function displayDescending(products) {
+      const productList = document.getElementById("productList");
+      const emptyState = document.getElementById("emptyState");
+      
+      // Clear existing products but keep skeleton
+      const existingProducts = productList.querySelectorAll('.card:not(#loadingSkeleton *)');
+      existingProducts.forEach(card => card.remove());
+
+      if (products.length === 0) {
+        emptyState.classList.remove("hidden");
+        return;
+      } else {
+        emptyState.classList.add("hidden");
+      }
+      products.sort((a, b) => b.price - a.price);
+
+      products.forEach((product) => {
+        const productCard = createProductCard(product);
+        productList.appendChild(productCard);
+      });
     }
 
     function hideLoadingSkeleton() {

@@ -25,6 +25,8 @@ from main.views import (
     ajax_auth,
     ajax_login,
     ajax_register,
+    proxy_image,
+    create_product_flutter,
     
                         )
 
@@ -56,4 +58,7 @@ urlpatterns = [
     path('ajax-auth/', ajax_auth, name='ajax_auth'),
     path('ajax/login/', ajax_login, name='ajax_login'),
     path('ajax/register/', ajax_register, name='ajax_register'),
+    
+    path('proxy-image/', proxy_image, name='proxy_image'),
+    path('create-flutter/', create_product_flutter, name='create_flutter'),
 ]

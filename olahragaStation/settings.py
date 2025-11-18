@@ -21,6 +21,24 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 PRODUCTION = os.getenv('PRODUCTION', 'False').lower() == 'true'
 
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOW_CREDENTIALS = True
+
+CSRF_COOKIE_SECURE = True
+
+SESSION_COOKIE_SECURE = True
+
+CSRF_COOKIE_SAMESITE = 'None'
+
+SESSION_COOKIE_SAMESITE = 'None'
+
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://heraldo-arman-pacilstation.pbp.cs.ui.ac.id',
+    'http://heraldo-arman-pacilstation.pbp.cs.ui.ac.id'   
+]
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
@@ -30,7 +48,7 @@ SECRET_KEY = 'django-insecure-_y1=lx*#j5ptpu24p@6e!6=8$bejnze0p%v@c(p5tb%40#k9(k
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "heraldo-arman-pacilstation.pbp.cs.ui.ac.id"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "heraldo-arman-pacilstation.pbp.cs.ui.ac.id", "10.0.2.2"]
 
 CSRF_TRUSTED_ORIGINS = ['https://heraldo-arman-pacilstation.pbp.cs.ui.ac.id']
 
@@ -44,6 +62,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
+    'authentication',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
