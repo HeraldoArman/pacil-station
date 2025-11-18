@@ -39,25 +39,24 @@ def create_product_flutter(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         
-        # Handle brand - either by ID or by name
-        brand = None
+        brand_id = None
         if data.get('brand_id'):
             brand_id = data.get('brand_id')
         elif data.get('brand'):
             try:
-                brand = Product.Brand.objects.get_or_404(name=strip_tags(data.get('brand_name')))
+                brand, created = Product.Brand.objects.get_or_create(
+                    name=strip_tags(data.get('brand'))
+                )
                 brand_id = brand.id
             except:
                 brand_id = None
-        else:
-            brand_id = None
 
         product = Product(
-            user=request.user,
+            user=request.user if request.user.is_authenticated else None,
             name=strip_tags(data.get('name')),
             price=data.get('price'),
             description=strip_tags(data.get('description')),
-            thumbnail=strip_tags(data.get('thumbnail')),
+            thumbnail=strip_tags(data.get('thumbnail', '')),
             flip_thumbnail=data.get('flip_thumbnail', False),
             category=strip_tags(data.get('category')),
             is_featured=data.get('is_featured', False),
@@ -71,7 +70,7 @@ def create_product_flutter(request):
         
         return JsonResponse({"status": "success"}, status=200)
     else:
-        return JsonResponse({"status": "error"}, status=401)
+        return JsonResponse({"status": "error"}, status=405)
 
 
 
