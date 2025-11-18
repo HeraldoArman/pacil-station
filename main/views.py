@@ -39,6 +39,19 @@ def create_product_flutter(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         
+        # Handle brand - either by ID or by name
+        brand = None
+        if data.get('brand_id'):
+            brand_id = data.get('brand_id')
+        elif data.get('brand'):
+            try:
+                brand = Product.Brand.objects.get_or_404(name=strip_tags(data.get('brand_name')))
+                brand_id = brand.id
+            except:
+                brand_id = None
+        else:
+            brand_id = None
+
         product = Product(
             user=request.user,
             name=strip_tags(data.get('name')),
@@ -52,7 +65,7 @@ def create_product_flutter(request):
             rating=data.get('rating', 0.0),
             stock=data.get('stock', 0),
             total_sales=data.get('total_sales', 0),
-            brand_id=data.get('brand_id') if data.get('brand_id') else None
+            brand_id=brand_id
         )
         product.save()
         
@@ -185,8 +198,7 @@ def add_product_ajax(request):
 
 
 def get_product_form_ajax(request):
-    from .models import Product
-    from .forms import ProductForm
+
     
     form = ProductForm()
     brands = Product.Brand.objects.all()
